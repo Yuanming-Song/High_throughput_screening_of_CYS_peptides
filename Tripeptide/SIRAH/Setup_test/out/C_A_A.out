@@ -1,0 +1,19 @@
+peptide C_A_A
+Directory 'C_A_A' already exists, submit manually.
+rm: cannot remove '*trr*': No such file or directory
+rm: cannot remove '*edr*': No such file or directory
+rm: cannot remove '*ndx*': No such file or directory
+rm: cannot remove '*log*': No such file or directory
+rm: cannot remove '*gro*': No such file or directory
+rm: cannot remove '*tpr*': No such file or directory
+rm: cannot remove '*xtc*': No such file or directory
+rm: cannot remove '*itp*': No such file or directory
+rm: cannot remove '*top*': No such file or directory
+rm: cannot remove '*cpt*': No such file or directory
+Solvating solute in water is done, check solvate.log file
+Adding ion is done, check genion.log file
+Side chain minimization is done, check em1_CGPROT.log file
+All atom minimization done, check em2_CGPROT.log file
+NPT equal done, check NPT_solvent.log file
+eq1 done
+eq2 done

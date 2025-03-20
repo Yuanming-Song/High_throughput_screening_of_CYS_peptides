@@ -1,0 +1,26 @@
+                     :-) GROMACS - gmx genrestr, 2024.2 (-:
+
+Executable:   /opt/apps/gromacs/2024.2/gcc/11.2.0/cuda/11.7.1/bin/gmx
+Data prefix:  /opt/apps/gromacs/2024.2/gcc/11.2.0/cuda/11.7.1
+Working dir:  /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/SIRAH/Setup_test/G_A_C
+Command line:
+  gmx genrestr -f G_A_C_CG.gro -n G_A_C_CG.ndx -o bkbres_soft.itp -fc 100 100 100
+
+
+Reading structure file
+Group     0 (         System) has    20 elements
+Group     1 (        Protein) has    20 elements
+Group     2 (      Protein-H) has    20 elements
+Group     3 (        C-alpha) has     0 elements
+Group     4 (       Backbone) has     0 elements
+Group     5 (      MainChain) has     0 elements
+Group     6 (   MainChain+Cb) has     0 elements
+Group     7 (    MainChain+H) has     0 elements
+Group     8 (      SideChain) has    20 elements
+Group     9 (    SideChain-H) has    20 elements
+Group    10 (          GN_GO) has    12 elements
+Select a group: 
+GROMACS reminds you: "Insane In Tha Membrane" (Cypress Hill)
+
+Select group to position restrain
+Selected 10: 'GN_GO'

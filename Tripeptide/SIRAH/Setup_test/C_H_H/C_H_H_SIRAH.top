@@ -1,0 +1,292 @@
+;
+;	File 'C_H_H_SIRAH.top' was generated
+;	By user: unknown (1726219)
+;	On host: hpc3-23-03
+;	At date: Tue Nov 12 02:14:56 2024
+;
+;	This is a standalone topology file
+;
+;	Created by:
+;	                    :-) GROMACS - gmx pdb2gmx, 2024.2 (-:
+;	
+;	Executable:   /opt/apps/gromacs/2024.2/gcc/11.2.0/cuda/11.7.1/bin/gmx
+;	Data prefix:  /opt/apps/gromacs/2024.2/gcc/11.2.0/cuda/11.7.1
+;	Working dir:  /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/SIRAH/Setup_test/C_H_H
+;	Command line:
+;	  gmx pdb2gmx -f C_H_H_CG_redo.pdb -o C_H_H_CG_redo.gro -ff sirah -p C_H_H_SIRAH.top -merge all
+;	Force field was read from current directory or a relative path - path added.
+;
+
+; Include forcefield parameters
+#include "./sirah.ff/forcefield.itp"
+
+[ moleculetype ]
+; Name            nrexcl
+Protein_chain_A     3
+
+[ atoms ]
+;   nr       type  resnr residue  atom   cgnr     charge       mass  typeB    chargeB      massB
+; residue   1 sX  rtp sX   q +1.0
+     1        GNz      1     sX     GN      1        0.6         50
+     2         GC      1     sX     GC      2        0.4         50
+     3       Y5Sx      1     sX    BSG      3          0         50
+     4         GO      1     sX     GO      4          0         50   ; qtot 1
+; residue   2 sHe rtp sHe  q  0.0
+     5         GN      2    sHe     GN      5       0.13         50
+     6         GC      2    sHe     GC      6        0.1         50
+     7        A2C      2    sHe    BCG      7          0         50
+     8        A5E      2    sHe    BNE      8        0.1         50
+     9        A5D      2    sHe    BND      9       -0.1         50
+    10         GO      2    sHe     GO     10      -0.23         50   ; qtot 1
+; residue   3 sHe rtp sHe  q -1.0
+    11         GN      3    sHe     GN     11          0         50
+    12         GC      3    sHe     GC     12       -0.4         50
+    13        A2C      3    sHe    BCG     13          0         50
+    14        A5E      3    sHe    BNE     14        0.1         50
+    15        A5D      3    sHe    BND     15       -0.1         50
+    16        GOz      3    sHe     GO     16       -0.6         50   ; qtot 0
+; residue   1 sX  rtp sX   q +1.0
+    17        GNz      1     sX     GN     17        0.6         50
+    18         GC      1     sX     GC     18        0.4         50
+    19       Y5Sx      1     sX    BSG     19          0         50
+    20         GO      1     sX     GO     20          0         50   ; qtot 1
+; residue   2 sHe rtp sHe  q  0.0
+    21         GN      2    sHe     GN     21       0.13         50
+    22         GC      2    sHe     GC     22        0.1         50
+    23        A2C      2    sHe    BCG     23          0         50
+    24        A5E      2    sHe    BNE     24        0.1         50
+    25        A5D      2    sHe    BND     25       -0.1         50
+    26         GO      2    sHe     GO     26      -0.23         50   ; qtot 1
+; residue   3 sHe rtp sHe  q -1.0
+    27         GN      3    sHe     GN     27          0         50
+    28         GC      3    sHe     GC     28       -0.4         50
+    29        A2C      3    sHe    BCG     29          0         50
+    30        A5E      3    sHe    BNE     30        0.1         50
+    31        A5D      3    sHe    BND     31       -0.1         50
+    32        GOz      3    sHe     GO     32       -0.6         50   ; qtot 0
+
+[ bonds ]
+;  ai    aj funct            c0            c1            c2            c3
+    1     2     1 
+    2     3     1 
+    2     4     1 
+    3    19     1 
+    4     5     1 
+    5     6     1 
+    6     7     1 
+    6    10     1 
+    7     8     1 
+    7     9     1 
+    8     9     1 
+   10    11     1 
+   11    12     1 
+   12    13     1 
+   12    16     1 
+   13    14     1 
+   13    15     1 
+   14    15     1 
+   17    18     1 
+   18    19     1 
+   18    20     1 
+   20    21     1 
+   21    22     1 
+   22    23     1 
+   22    26     1 
+   23    24     1 
+   23    25     1 
+   24    25     1 
+   26    27     1 
+   27    28     1 
+   28    29     1 
+   28    32     1 
+   29    30     1 
+   29    31     1 
+   30    31     1 
+
+[ pairs ]
+;  ai    aj funct            c0            c1            c2            c3
+    1     5     1 
+    1    19     1 
+    2     6     1 
+    2    18     1 
+    3     5     1 
+    3    17     1 
+    3    20     1 
+    4     7     1 
+    4    10     1 
+    4    19     1 
+    5     8     1 
+    5     9     1 
+    5    11     1 
+    6    12     1 
+    7    11     1 
+    8    10     1 
+    9    10     1 
+   10    13     1 
+   10    16     1 
+   11    14     1 
+   11    15     1 
+   14    16     1 
+   15    16     1 
+   17    21     1 
+   18    22     1 
+   19    21     1 
+   20    23     1 
+   20    26     1 
+   21    24     1 
+   21    25     1 
+   21    27     1 
+   22    28     1 
+   23    27     1 
+   24    26     1 
+   25    26     1 
+   26    29     1 
+   26    32     1 
+   27    30     1 
+   27    31     1 
+   30    32     1 
+   31    32     1 
+
+[ angles ]
+;  ai    aj    ak funct            c0            c1            c2            c3
+    1     2     3     1 
+    1     2     4     1 
+    3     2     4     1 
+    2     3    19     1 
+    2     4     5     1 
+    4     5     6     1 
+    5     6     7     1 
+    5     6    10     1 
+    7     6    10     1 
+    6     7     8     1 
+    6     7     9     1 
+    8     7     9     1 
+    7     8     9     1 
+    7     9     8     1 
+    6    10    11     1 
+   10    11    12     1 
+   11    12    13     1 
+   11    12    16     1 
+   13    12    16     1 
+   12    13    14     1 
+   12    13    15     1 
+   14    13    15     1 
+   13    14    15     1 
+   13    15    14     1 
+   17    18    19     1 
+   17    18    20     1 
+   19    18    20     1 
+    3    19    18     1 
+   18    20    21     1 
+   20    21    22     1 
+   21    22    23     1 
+   21    22    26     1 
+   23    22    26     1 
+   22    23    24     1 
+   22    23    25     1 
+   24    23    25     1 
+   23    24    25     1 
+   23    25    24     1 
+   22    26    27     1 
+   26    27    28     1 
+   27    28    29     1 
+   27    28    32     1 
+   29    28    32     1 
+   28    29    30     1 
+   28    29    31     1 
+   30    29    31     1 
+   29    30    31     1 
+   29    31    30     1 
+
+[ dihedrals ]
+;  ai    aj    ak    al funct            c0            c1            c2            c3            c4            c5
+    1     2     3    19     9 
+    4     2     3    19     9 
+    1     2     4     5     9 
+    3     2     4     5     9 
+    2     3    19    18     9 
+    2     4     5     6     9 
+    4     5     6     7     9 
+    4     5     6    10     9 
+    5     6     7     8     9 
+    5     6     7     9     9 
+   10     6     7     8     9 
+   10     6     7     9     9 
+    5     6    10    11     9 
+    7     6    10    11     9 
+    6     7     8     9     9 
+    6     7     9     8     9 
+    6    10    11    12     9 
+   10    11    12    13     9 
+   10    11    12    16     9 
+   11    12    13    14     9 
+   11    12    13    15     9 
+   16    12    13    14     9 
+   16    12    13    15     9 
+   12    13    14    15     9 
+   12    13    15    14     9 
+   17    18    19     3     9 
+   20    18    19     3     9 
+   17    18    20    21     9 
+   19    18    20    21     9 
+   18    20    21    22     9 
+   20    21    22    23     9 
+   20    21    22    26     9 
+   21    22    23    24     9 
+   21    22    23    25     9 
+   26    22    23    24     9 
+   26    22    23    25     9 
+   21    22    26    27     9 
+   23    22    26    27     9 
+   22    23    24    25     9 
+   22    23    25    24     9 
+   22    26    27    28     9 
+   26    27    28    29     9 
+   26    27    28    32     9 
+   27    28    29    30     9 
+   27    28    29    31     9 
+   32    28    29    30     9 
+   32    28    29    31     9 
+   28    29    30    31     9 
+   28    29    31    30     9 
+
+[ dihedrals ]
+;  ai    aj    ak    al funct            c0            c1            c2            c3
+    3     2     1     4     4 
+    7     6     5    10     4 
+   13    12    11    16     4 
+   19    18    17    20     4 
+   23    22    21    26     4 
+   29    28    27    32     4 
+
+; Include Position restraint file
+#ifdef POSRES
+#include "posre.itp"
+#endif
+
+; Backbone restraints
+#ifdef GN_GO
+#include "bkbres.itp"
+#endif
+; Backbone soft restrains
+#ifdef GN_GO_SOFT
+#include "bkbres_soft.itp"
+#endif
+; Include water topology
+#include "./sirah.ff/solv.itp"
+
+#ifdef POSRES_WATER
+; Position restraint for each water oxygen
+[ position_restraints ]
+;  i funct       fcx        fcy        fcz
+   1    1       1000       1000       1000
+#endif
+
+[ system ]
+; Name
+Protein in water
+
+[ molecules ]
+; Compound        #mols
+Protein_chain_A     150
+WT4              5108

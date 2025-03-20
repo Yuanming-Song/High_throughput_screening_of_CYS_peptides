@@ -1,0 +1,29 @@
+                     :-) GROMACS - gmx editconf, 2024.2 (-:
+
+Executable:   /opt/apps/gromacs/2024.2/gcc/11.2.0/cuda/11.7.1/bin/gmx
+Data prefix:  /opt/apps/gromacs/2024.2/gcc/11.2.0/cuda/11.7.1
+Working dir:  /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/SIRAH/Setup_test/C_A_A
+Command line:
+  gmx editconf -f C_A_A_CG_Lattice.gro -box 13 13 13 -bt cubic -o C_A_A_CG_Lattice.gro -d 1 -translate .25000000000000000000 .25000000000000000000 .25000000000000000000
+
+
+Back Off! I just backed up C_A_A_CG_Lattice.gro to ./#C_A_A_CG_Lattice.gro.1#
+
+GROMACS reminds you: "We all understand the twinge of discomfort at the thought that we share a common ancestor with the apes. No one can embarrass you like a relative." (Neal DeGrasse Tyson)
+
+Note that major changes are planned in future for editconf, to improve usability and utility.
+Read 3300 atoms
+Volume: 1953.12 nm^3, corresponds to roughly 878900 electrons
+No velocities found
+    system size : 12.897 12.824 13.089 (nm)
+    diameter    : 20.316               (nm)
+    center      :  6.273  6.123  6.347 (nm)
+    box vectors : 12.500 12.500 12.500 (nm)
+    box angles  :  90.00  90.00  90.00 (degrees)
+    box volume  :1953.12               (nm^3)
+Translating 3300 atoms (out of 3300) by 0.25 0.25 0.25 nm
+    shift       : -0.023  0.127 -0.097 (nm)
+new center      :  6.500  6.500  6.500 (nm)
+new box vectors : 13.000 13.000 13.000 (nm)
+new box angles  :  90.00  90.00  90.00 (degrees)
+new box volume  :2197.00               (nm^3)

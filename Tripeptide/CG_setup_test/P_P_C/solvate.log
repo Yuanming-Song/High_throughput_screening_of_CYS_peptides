@@ -1,0 +1,51 @@
+                     :-) GROMACS - gmx solvate, 2022.1 (-:
+
+Executable:   /opt/apps/gromacs/2022.1/gcc/8.4.0/cuda/11.7.1/bin/gmx
+Data prefix:  /opt/apps/gromacs/2022.1/gcc/8.4.0/cuda/11.7.1
+Working dir:  /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/CG_setup_test/P_P_C
+Command line:
+  gmx solvate -cp P_P_C_CG_Lattice.gro -cs /dfs9/tw/yuanmis1/mrsec/FFssFF/CG_single/ubiquitin/martini//water.gro -radius 0.21 -o P_P_C_CG_solvated.gro -box 13 13 13
+
+Reading solute configuration
+Reading solvent configuration
+
+Initialising inter-atomic distances...
+
+WARNING: Masses and atomic (Van der Waals) radii will be guessed
+         based on residue and atom names, since they could not be
+         definitively assigned from the information in your input
+         files. These guessed numbers might deviate from the mass
+         and radius of the atom type. Please check the output
+         files if necessary. Note, that this functionality may
+         be removed in a future GROMACS version. Please, consider
+         using another file format for your input.
+
+NOTE: From version 5.0 gmx solvate uses the Van der Waals radii
+from the source below. This means the results may be different
+compared to previous GROMACS versions.
+
+++++ PLEASE READ AND CITE THE FOLLOWING REFERENCE ++++
+A. Bondi
+van der Waals Volumes and Radii
+J. Phys. Chem. 68 (1964) pp. 441-451
+-------- -------- --- Thank You --- -------- --------
+
+Generating solvent configuration
+Will generate new solvent configuration of 4x4x4 boxes
+Solvent box contains 20818 atoms in 20818 residues
+Removed 3356 solvent atoms due to solvent-solvent overlap
+Removed 1798 solvent atoms due to solute-solvent overlap
+Sorting configuration
+Found 1 molecule type:
+      W (   1 atoms): 15664 residues
+Generated solvent containing 15664 atoms in 15664 residues
+Writing generated configuration to P_P_C_CG_solvated.gro
+
+Output configuration contains 17464 atoms in 16564 residues
+Volume                 :        2197 (nm^3)
+Density                :     2205.68 (g/l)
+Number of solvent molecules:  15664   
+
+
+GROMACS reminds you: "Even the *healthy* people move in clouds of cigarette smoke, women straining polyester, men in raggedly cutoffs slathering mayonnaise on foot-long hot dogs. It's as if the hotel were hosting a conference on adult onset diabetes" (Jess Walter)
+

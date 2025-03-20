@@ -1,0 +1,129 @@
+;
+;	File 'A_C_G_SIRAH.top' was generated
+;	By user: unknown (1726219)
+;	On host: hpc3-14-02
+;	At date: Tue Nov 12 00:16:43 2024
+;
+;	This is a standalone topology file
+;
+;	Created by:
+;	                    :-) GROMACS - gmx pdb2gmx, 2024.2 (-:
+;	
+;	Executable:   /opt/apps/gromacs/2024.2/gcc/11.2.0/cuda/11.7.1/bin/gmx
+;	Data prefix:  /opt/apps/gromacs/2024.2/gcc/11.2.0/cuda/11.7.1
+;	Working dir:  /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/SIRAH/Setup_test/A_C_G
+;	Command line:
+;	  gmx pdb2gmx -f A_C_G_CG.pdb -o A_C_G_CG.gro -ff sirah -p A_C_G_SIRAH.top -merge all
+;	Force field was read from current directory or a relative path - path added.
+;
+
+; Include forcefield parameters
+#include "./sirah.ff/forcefield.itp"
+
+[ moleculetype ]
+; Name            nrexcl
+Protein_chain_A     3
+
+[ atoms ]
+;   nr       type  resnr residue  atom   cgnr     charge       mass  typeB    chargeB      massB
+; residue   1 sA  rtp sA   q +1.0
+     1        GNz      1     sA     GN      1        0.6         50
+     2         GC      1     sA     GC      2        0.4         50
+     3         GO      1     sA     GO      3          0         50   ; qtot 1
+; residue   2 sC  rtp sC   q  0.0
+     4         GN      2     sC     GN      4       0.13         50
+     5         GC      2     sC     GC      5        0.1         50
+     6        P1S      2     sC    BSG      6       -0.2         50
+     7        P2P      2     sC    BPG      7        0.2         50
+     8         GO      2     sC     GO      8      -0.23         50   ; qtot 1
+; residue   3 sG  rtp sG   q -1.0
+     9         GN      3     sG     GN      9          0         50
+    10         GC      3     sG     GC     10       -0.4         50
+    11        GOz      3     sG     GO     11       -0.6         50   ; qtot 0
+
+[ bonds ]
+;  ai    aj funct            c0            c1            c2            c3
+    1     2     1 
+    2     3     1 
+    3     4     1 
+    4     5     1 
+    5     6     1 
+    5     8     1 
+    6     7     1 
+    8     9     1 
+    9    10     1 
+   10    11     1 
+
+[ pairs ]
+;  ai    aj funct            c0            c1            c2            c3
+    1     4     1 
+    2     5     1 
+    3     6     1 
+    3     8     1 
+    4     7     1 
+    4     9     1 
+    5    10     1 
+    6     9     1 
+    7     8     1 
+    8    11     1 
+
+[ angles ]
+;  ai    aj    ak funct            c0            c1            c2            c3
+    1     2     3     1 
+    2     3     4     1 
+    3     4     5     1 
+    4     5     6     1 
+    4     5     8     1 
+    6     5     8     1 
+    5     6     7     1 
+    5     8     9     1 
+    8     9    10     1 
+    9    10    11     1 
+
+[ dihedrals ]
+;  ai    aj    ak    al funct            c0            c1            c2            c3            c4            c5
+    1     2     3     4     9 
+    2     3     4     5     9 
+    3     4     5     6     9 
+    3     4     5     8     9 
+    4     5     6     7     9 
+    8     5     6     7     9 
+    4     5     8     9     9 
+    6     5     8     9     9 
+    5     8     9    10     9 
+    8     9    10    11     9 
+
+[ dihedrals ]
+;  ai    aj    ak    al funct            c0            c1            c2            c3
+    6     5     4     8     4 
+
+; Include Position restraint file
+#ifdef POSRES
+#include "posre.itp"
+#endif
+
+; Backbone restraints
+#ifdef GN_GO
+#include "bkbres.itp"
+#endif
+; Backbone soft restrains
+#ifdef GN_GO_SOFT
+#include "bkbres_soft.itp"
+#endif
+; Include water topology
+#include "./sirah.ff/solv.itp"
+
+#ifdef POSRES_WATER
+; Position restraint for each water oxygen
+[ position_restraints ]
+;  i funct       fcx        fcy        fcz
+   1    1       1000       1000       1000
+#endif
+
+[ system ]
+; Name
+Protein
+
+[ molecules ]
+; Compound        #mols
+Protein_chain_A     300

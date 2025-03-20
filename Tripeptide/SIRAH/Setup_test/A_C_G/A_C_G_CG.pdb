@@ -1,0 +1,12 @@
+ATOM      1   GN sA  A   1       2.097   2.656   0.093 
+ATOM      2   GC sA  A   1       2.889   1.935   1.135 
+ATOM      3   GO sA  A   1       4.689   3.307   0.484 
+ATOM      4   GN sC  A   2       4.658   2.558   2.620 
+ATOM      5   GC sC  A   2       6.078   2.534   2.855 
+ATOM      6  BSG sC  A   2       5.863   5.190   3.847 
+ATOM      7  BPG sC  A   2       6.777   6.155   3.731 
+ATOM      8   GO sC  A   2       6.134   2.288   5.240 
+ATOM      9   GN sG  A   3       6.472   0.427   4.090 
+ATOM     10   GC sG  A   3       6.444  -0.435   2.902 
+ATOM     11   GO sG  A   3       5.239  -0.288   0.821 
+END

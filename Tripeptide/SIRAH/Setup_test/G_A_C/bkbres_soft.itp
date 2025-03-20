@@ -1,0 +1,16 @@
+; position restraints for GN_GO of GRoups of Organic Molecules in ACtion for Science
+
+[ position_restraints ]
+;  i funct       fcx        fcy        fcz
+   1    1        100        100        100
+   3    1        100        100        100
+   4    1        100        100        100
+   6    1        100        100        100
+   7    1        100        100        100
+  10    1        100        100        100
+  11    1        100        100        100
+  13    1        100        100        100
+  14    1        100        100        100
+  16    1        100        100        100
+  17    1        100        100        100
+  20    1        100        100        100

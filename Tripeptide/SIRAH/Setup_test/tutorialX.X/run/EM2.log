@@ -1,0 +1,33 @@
+                      :-) GROMACS - gmx mdrun, 2024.2 (-:
+
+Executable:   /opt/apps/gromacs/2024.2/gcc/11.2.0/cuda/11.7.1/bin/gmx
+Data prefix:  /opt/apps/gromacs/2024.2/gcc/11.2.0/cuda/11.7.1
+Working dir:  /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/SIRAH/Setup_test/tutorialX.X/run
+Command line:
+  gmx mdrun -deffnm 1CRN_cg_em2
+
+Compiled SIMD is AVX2_128, but AVX_512 might be faster (see log).
+Reading file 1CRN_cg_em2.tpr, VERSION 2024.2 (single precision)
+Using 1 MPI thread
+
+Non-default thread affinity set, disabling internal thread affinity
+
+Using 10 OpenMP threads 
+
+
+Steepest Descents:
+   Tolerance (Fmax)   =  1.00000e+00
+   Number of steps    =         5000
+
+Energy minimization reached the maximum number of steps before the forces
+reached the requested precision Fmax < 1.
+
+writing lowest energy coordinates.
+
+Steepest Descents did not converge to Fmax < 1 in 5001 steps.
+Potential Energy  = -6.4855324e+04
+Maximum force     =  7.3944099e+01 on atom 20
+Norm of force     =  4.0530868e+00
+
+GROMACS reminds you: "When It Starts to Start It'll Never Stop" (Magnapop)
+

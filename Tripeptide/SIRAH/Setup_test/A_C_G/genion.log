@@ -1,0 +1,14 @@
+                      :-) GROMACS - gmx genion, 2024.2 (-:
+
+Executable:   /opt/apps/gromacs/2024.2/gcc/11.2.0/cuda/11.7.1/bin/gmx
+Data prefix:  /opt/apps/gromacs/2024.2/gcc/11.2.0/cuda/11.7.1
+Working dir:  /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/SIRAH/Setup_test/A_C_G
+Command line:
+  gmx genion -s em1.tpr -o A_C_G_CG_solvated_ions.gro -neutral -rmin 0.5 -p A_C_G_SIRAH.top -nname ClW -pname NaW
+
+Reading file em1.tpr, VERSION 2024.2 (single precision)
+Reading file em1.tpr, VERSION 2024.2 (single precision)
+No ions to add, will just copy input configuration.
+
+GROMACS reminds you: "Lets get back to beer" (Yuxuan Zhuang, in a discussion about science communication)
+

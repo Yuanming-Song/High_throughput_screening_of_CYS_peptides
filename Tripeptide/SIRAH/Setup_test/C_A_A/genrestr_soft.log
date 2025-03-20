@@ -1,0 +1,26 @@
+                     :-) GROMACS - gmx genrestr, 2024.2 (-:
+
+Executable:   /opt/apps/gromacs/2024.2/gcc/11.2.0/cuda/11.7.1/bin/gmx
+Data prefix:  /opt/apps/gromacs/2024.2/gcc/11.2.0/cuda/11.7.1
+Working dir:  /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/SIRAH/Setup_test/C_A_A
+Command line:
+  gmx genrestr -f C_A_A_CG.gro -n C_A_A_CG.ndx -o bkbres_soft.itp -fc 100 100 100
+
+
+Reading structure file
+Group     0 (         System) has    11 elements
+Group     1 (        Protein) has    11 elements
+Group     2 (      Protein-H) has    11 elements
+Group     3 (        C-alpha) has     0 elements
+Group     4 (       Backbone) has     0 elements
+Group     5 (      MainChain) has     0 elements
+Group     6 (   MainChain+Cb) has     0 elements
+Group     7 (    MainChain+H) has     0 elements
+Group     8 (      SideChain) has    11 elements
+Group     9 (    SideChain-H) has    11 elements
+Group    10 (          GN_GO) has     6 elements
+Select a group: 
+GROMACS reminds you: "We all understand the twinge of discomfort at the thought that we share a common ancestor with the apes. No one can embarrass you like a relative." (Neal DeGrasse Tyson)
+
+Select group to position restrain
+Selected 10: 'GN_GO'

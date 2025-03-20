@@ -1,0 +1,48 @@
+                      :-) GROMACS - gmx grompp, 2022.1 (-:
+
+Executable:   /opt/apps/gromacs/2022.1/gcc/8.4.0/cuda/11.7.1/bin/gmx
+Data prefix:  /opt/apps/gromacs/2022.1/gcc/8.4.0/cuda/11.7.1
+Working dir:  /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/CG_setup_test/P_P_C
+Command line:
+  gmx grompp -p P_P_C_CG.top -c equilibration.gro -f /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/dynamic.mdp -o P_P_C_CG_md.tpr -maxwarn 1
+
+Ignoring obsolete mdp entry 'title'
+Ignoring obsolete mdp entry 'ns_type'
+
+WARNING 1 [file /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/dynamic.mdp]:
+  You are generating velocities so I am assuming you are equilibrating a
+  system. You are using Parrinello-Rahman pressure coupling, but this can
+  be unstable for equilibration. If your system crashes, try equilibrating
+  first with Berendsen pressure coupling. If you are not equilibrating the
+  system, you can probably ignore this warning.
+
+Number of degrees of freedom in T-Coupling group System is 52239.00
+
+There was 1 warning
+
+GROMACS reminds you: "Science is the great antidote to the poison of enthusiasm and superstition." (Adam Smith, Wealth of Nations, 1776)
+
+Setting the LD random seed to -1879126081
+
+Generated 844 of the 356590 non-bonded parameter combinations
+
+Excluding 1 bonded neighbours molecule type 'P_P_C_A+P_P_C_B'
+
+Excluding 1 bonded neighbours molecule type 'W'
+
+Velocities were taken from a Maxwell distribution at 300 K
+Analysing residue names:
+There are:   900    Protein residues
+There are: 15664      Other residues
+Analysing Protein...
+Analysing residues not classified as Protein/DNA/RNA/Water and splitting into groups...
+
+Determining Verlet buffer for a tolerance of 0.005 kJ/mol/ps at 300 K
+
+Calculated rlist for 1x1 atom pair-list as 1.361 nm, buffer size 0.261 nm
+
+Set rlist, assuming 4x4 atom pair-list, to 1.257 nm, buffer size 0.157 nm
+
+Note that mdrun will redetermine rlist based on the actual pair-list setup
+
+This run will generate roughly 56 Mb of data

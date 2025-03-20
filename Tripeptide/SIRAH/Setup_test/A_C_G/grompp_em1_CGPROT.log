@@ -1,0 +1,45 @@
+                      :-) GROMACS - gmx grompp, 2024.2 (-:
+
+Executable:   /opt/apps/gromacs/2024.2/gcc/11.2.0/cuda/11.7.1/bin/gmx
+Data prefix:  /opt/apps/gromacs/2024.2/gcc/11.2.0/cuda/11.7.1
+Working dir:  /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/SIRAH/Setup_test/A_C_G
+Command line:
+  gmx grompp -p A_C_G_SIRAH.top -c A_C_G_CG_solvated_ions.gro -f /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/SIRAH/mdp_files/em1_CGPROT.mdp -o A_C_G_SIRAH_em1.tpr -n A_C_G_CG_solvated2.ndx -r A_C_G_CG_solvated_ions.gro -po em1.mdp -maxwarn 1
+
+Ignoring obsolete mdp entry 'title'
+Ignoring obsolete mdp entry 'cpp'
+Ignoring obsolete mdp entry 'optimize_fft'
+Ignoring obsolete mdp entry 'ns_type'
+Replacing old mdp entry 'nstxtcout' by 'nstxout-compressed'
+Replacing old mdp entry 'xtc-precision' by 'compressed-x-precision'
+Generating 1-4 interactions: fudge = 0.5
+Number of degrees of freedom in T-Coupling group rest is 74709.00
+The integrator does not provide a ensemble temperature, there is no system ensemble temperature
+
+NOTE 1 [file /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/SIRAH/mdp_files/em1_CGPROT.mdp]:
+  Removing center of mass motion in the presence of position restraints
+  might cause artifacts. When you are using position restraints to
+  equilibrate a macro-molecule, the artifacts are usually negligible.
+
+
+There was 1 NOTE
+
+GROMACS reminds you: "Why would I pay GitHub $100/year for an AI to tell me what code to write when men do it for free?" (Safia Abdalla)
+
+Setting the LD random seed to -35181389
+
+Generated 2362 of the 2556 non-bonded parameter combinations
+
+Generated 2556 of the 2556 1-4 parameter combinations
+
+Excluding 3 bonded neighbours molecule type 'Protein_chain_A'
+
+Excluding 3 bonded neighbours molecule type 'WT4'
+
+The largest distance between excluded atoms is 0.520 nm between atom 514 and 517
+Calculating fourier grid dimensions for X Y Z
+Using a fourier grid of 72x72x72, spacing 0.181 0.181 0.181
+
+Estimate for the relative computational load of the PME mesh part: 0.48
+
+This run will generate roughly 210 Mb of data

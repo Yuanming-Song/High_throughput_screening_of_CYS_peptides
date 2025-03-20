@@ -1,0 +1,10 @@
+; position restraints for GN_GO of Guyana Rwanda Oman Macau Angola Cameroon Senegal
+
+[ position_restraints ]
+;  i funct       fcx        fcy        fcz
+   1    1       1000       1000       1000
+   5    1       1000       1000       1000
+   6    1       1000       1000       1000
+   8    1       1000       1000       1000
+   9    1       1000       1000       1000
+  11    1       1000       1000       1000

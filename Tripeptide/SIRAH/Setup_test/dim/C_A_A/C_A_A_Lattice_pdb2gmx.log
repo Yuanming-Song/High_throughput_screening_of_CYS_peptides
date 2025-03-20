@@ -1,0 +1,116 @@
+                     :-) GROMACS - gmx pdb2gmx, 2024.2 (-:
+
+Executable:   /opt/apps/gromacs/2024.2/gcc/11.2.0/cuda/11.7.1/bin/gmx
+Data prefix:  /opt/apps/gromacs/2024.2/gcc/11.2.0/cuda/11.7.1
+Working dir:  /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/SIRAH/Setup_test/dim/C_A_A
+Command line:
+  gmx pdb2gmx -f C_A_A_CG_redo.pdb -o C_A_A_CG_redo.gro -ff sirah -p C_A_A_SIRAH.top -merge all
+
+Opening force field file ./sirah.ff/watermodels.dat
+Opening force field file ./sirah.ff/dna.r2b
+All occupancy fields zero. This is probably not an X-Ray structure
+Opening force field file ./sirah.ff/atomtypes.atp
+Opening force field file ./sirah.ff/aminoacids.rtp
+Opening force field file ./sirah.ff/csh.rtp
+Opening force field file ./sirah.ff/dna.rtp
+Opening force field file ./sirah.ff/ligands.rtp
+Opening force field file ./sirah.ff/lipid.rtp
+Opening force field file ./sirah.ff/lipid_fragments.rtp
+Opening force field file ./sirah.ff/pep2.rtp
+Opening force field file ./sirah.ff/aminoacids.n.tdb
+Opening force field file ./sirah.ff/aminoacids.c.tdb
+21 out of 21 lines of specbond.dat converted successfully
+Special Atom Distance matrix:
+                     sX1
+                    BSG3
+     sX1   BSG13   0.202
+Linking sX-1 BSG-3 and sX-1 BSG-13...
+Opening force field file ./sirah.ff/dna.arn
+
+Long Bond (2-3 = 0.287519 nm)
+
+Long Bond (12-13 = 0.281011 nm)
+Before cleaning: 19 pairs
+Before cleaning: 19 dihedrals
+
+Back Off! I just backed up posre.itp to ./#posre.itp.1#
+
+GROMACS reminds you: "It's just B I O L O G Y, can't you see?" (Joe Jackson)
+
+Using the Sirah force field in directory ./sirah.ff
+
+Select the Water Model:
+
+ 1: SIRAH solvent models
+
+ 2: None
+
+going to rename ./sirah.ff/dna.r2b
+Reading C_A_A_CG_redo.pdb...
+Read '', 20 atoms
+
+Analyzing pdb file
+Splitting chemical chains based on TER records or chain id changing.
+
+Merged chains into joint molecule definitions at 1 places.
+
+There are 1 chains and 0 blocks of water and 6 residues with 20 atoms
+
+  chain  #res #atoms
+
+  1 'A'     6     20  
+
+All occupancy fields zero. This is probably not an X-Ray structure
+
+Reading residue database... (Sirah)
+
+Processing chain 1 'A' (20 atoms, 6 residues)
+
+Identified residue sX1 as a starting terminus.
+
+Identified residue sA3 as a ending terminus.
+
+Identified residue sX1 as a starting terminus.
+
+Identified residue sA3 as a ending terminus.
+Start terminus sX-1: Charged
+End terminus sA-3: Charged
+Start terminus sX-1: Charged
+End terminus sA-3: Charged
+
+Checking for duplicate atoms....
+
+Generating any missing hydrogen atoms and/or adding termini.
+
+Now there are 6 residues with 20 atoms
+
+Making bonds...
+
+Long Bond (2-3 = 0.287519 nm)
+
+Long Bond (12-13 = 0.281011 nm)
+
+Number of bonds was 19, now 19
+
+Generating angles, dihedrals and pairs...
+
+Making cmap torsions...
+
+There are   19 dihedrals,    2 impropers,   20 angles
+            19 pairs,       19 bonds and     0 virtual sites
+
+Total mass 1000.000 a.m.u.
+
+Total charge -0.000 e
+
+Writing topology
+
+Writing coordinate file...
+
+		--------- PLEASE NOTE ------------
+
+You have successfully generated a topology from: C_A_A_CG_redo.pdb.
+
+The Sirah force field and the solv water model are used.
+
+		--------- ETON ESAELP ------------

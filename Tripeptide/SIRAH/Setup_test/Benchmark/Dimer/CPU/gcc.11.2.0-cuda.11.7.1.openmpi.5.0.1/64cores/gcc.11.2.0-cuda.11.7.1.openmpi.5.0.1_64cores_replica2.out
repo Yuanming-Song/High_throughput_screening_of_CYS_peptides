@@ -1,0 +1,30 @@
+                      :-) GROMACS - gmx mdrun, 2024.2 (-:
+
+Executable:   /opt/apps/gromacs/2024.2/gcc/11.2.0/cuda/11.7.1/openmpi/5.0.1/bin/gmx_mpi
+Data prefix:  /opt/apps/gromacs/2024.2/gcc/11.2.0/cuda/11.7.1/openmpi/5.0.1
+Working dir:  /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/SIRAH/Setup_test/Benchmark/Dimer/CPU/gcc.11.2.0-cuda.11.7.1.openmpi.5.0.1/64cores
+Command line:
+  gmx_mpi mdrun -s /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/SIRAH/Setup_test/Benchmark/Dimer/C_A_A_SIRAH_md.tpr -deffnm C_A_A_SIRAH_md_replica2
+
+Reading file /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/SIRAH/Setup_test/Benchmark/Dimer/C_A_A_SIRAH_md.tpr, VERSION 2024.2 (single precision)
+Changing nstlist from 10 to 25, rlist from 1.225 to 1.398
+
+Using 1 MPI process
+Using 64 OpenMP threads 
+
+starting mdrun 'Protein in water'
+10000 steps,    200.0 ps.
+
+Writing final coordinates.
+
+NOTE: 12 % of the run time was spent in domain decomposition,
+      4 % of the run time was spent in pair search,
+      you might want to increase nstlist (this has no effect on accuracy)
+
+               Core t (s)   Wall t (s)        (%)
+       Time:     1095.566       17.119     6399.7
+                 (ns/day)    (hour/ns)
+Performance:     1009.500        0.024
+
+GROMACS reminds you: "Performance and power are great targets for tuning, but really you want to tune for money!" (Erik Lindahl)
+

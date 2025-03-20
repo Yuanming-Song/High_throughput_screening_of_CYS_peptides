@@ -1,0 +1,21 @@
+ATOM      1   GN sG  A   1       0.920   3.554   0.581 
+ATOM      2   GC sG  A   1       0.419   2.144   0.510 
+ATOM      3   GO sG  A   1       1.251  -0.100   0.323 
+ATOM      4   GN sA  A   2       2.741   1.427   1.044 
+ATOM      5   GC sA  A   2       3.910   0.590   0.843 
+ATOM      6   GO sA  A   2       5.635   2.260   1.099 
+ATOM      7   GN sX  A   3       5.726   0.455   2.465 
+ATOM      8   GC sX  A   3       7.140   0.328   2.759 
+ATOM      9  BSG sX  A   3       7.627   2.856   4.038 
+ATOM     10   GO sX  A   3       8.440  -1.702   3.039 
+ATOM     11   GN sG  B   1       9.527  12.059   9.664 
+ATOM     12   GC sG  B   1       8.972  10.776   9.121 
+ATOM     13   GO sG  B   1      10.823  10.481   7.583 
+ATOM     14   GN sA  B   2       9.941   8.608   8.454 
+ATOM     15   GC sA  B   2      10.928   7.714   7.890 
+ATOM     16   GO sA  B   2       9.262   6.188   8.643 
+ATOM     17   GN sX  B   3      10.793   5.324   7.235 
+ATOM     18   GC sX  B   3      10.456   3.931   7.450 
+ATOM     19  BSG sX  B   3       9.447   3.459   4.772 
+ATOM     20   GO sX  B   3      12.681   3.648   6.553 
+END

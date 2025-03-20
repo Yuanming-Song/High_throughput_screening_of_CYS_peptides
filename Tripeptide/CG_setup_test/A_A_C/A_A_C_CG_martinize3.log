@@ -1,0 +1,59 @@
+    INFO - general - vermouth.pdb.pdb - Read 1 molecules from PDB file A_A_C.pdb
+    INFO - step - vermouth - Guessing the bonds.
+   DEBUG - general - vermouth.processors.make_bonds - Guessed bond between 1A-ALA1:N and 2A-ALA1:HT1 based on distance.
+   DEBUG - general - vermouth.processors.make_bonds - Guessed bond between 1A-ALA1:N and 3A-ALA1:HT2 based on distance.
+   DEBUG - general - vermouth.processors.make_bonds - Guessed bond between 1A-ALA1:N and 4A-ALA1:HT3 based on distance.
+   DEBUG - general - vermouth.processors.make_bonds - Guessed bond between 11A-ALA1:C and 13A-ALA2:N based on distance.
+   DEBUG - general - vermouth.processors.make_bonds - Guessed bond between 21A-ALA2:C and 23A-CYS3:N based on distance.
+   DEBUG - general - vermouth.processors.make_bonds - Guessed bond between 31A-CYS3:C and 32A-CYS3:OT1 based on distance.
+   DEBUG - general - vermouth.processors.make_bonds - Guessed bond between 31A-CYS3:C and 33A-CYS3:OT2 based on distance.
+   DEBUG - general - vermouth.processors.make_bonds - Guessed bond between 34B-ALA1:N and 35B-ALA1:HT1 based on distance.
+   DEBUG - general - vermouth.processors.make_bonds - Guessed bond between 34B-ALA1:N and 36B-ALA1:HT2 based on distance.
+   DEBUG - general - vermouth.processors.make_bonds - Guessed bond between 34B-ALA1:N and 37B-ALA1:HT3 based on distance.
+   DEBUG - general - vermouth.processors.make_bonds - Guessed bond between 44B-ALA1:C and 46B-ALA2:N based on distance.
+   DEBUG - general - vermouth.processors.make_bonds - Guessed bond between 54B-ALA2:C and 56B-CYS3:N based on distance.
+   DEBUG - general - vermouth.processors.make_bonds - Guessed bond between 30A-CYS3:SG and 63B-CYS3:SG based on distance.
+   DEBUG - general - vermouth.processors.make_bonds - Guessed bond between 64B-CYS3:C and 65B-CYS3:OT1 based on distance.
+   DEBUG - general - vermouth.processors.make_bonds - Guessed bond between 64B-CYS3:C and 66B-CYS3:OT2 based on distance.
+    INFO - general - vermouth.processors.make_bonds - 1 molecules after guessing bonds
+   DEBUG - step - vermouth - Annotating required mutations and modifications.
+   DEBUG - general - vermouth.processors.annotate_mut_mod - Annotating A-ALA1 with modification N-ter
+   DEBUG - general - vermouth.processors.annotate_mut_mod - Annotating B-ALA1 with modification N-ter
+    INFO - step - vermouth - Repairing the graph.
+   DEBUG - step - vermouth.processors.repair_graph - Making reference graph
+    INFO - general - vermouth.processors.repair_graph - Applying modification N-ter to residue A-ALA1
+   DEBUG - step - vermouth.processors.repair_graph - Matching residue A-ALA1 to its reference
+   DEBUG - step - vermouth.processors.repair_graph - Matching residue A-ALA2 to its reference
+   DEBUG - step - vermouth.processors.repair_graph - Matching residue A-CYS3 to its reference
+    INFO - general - vermouth.processors.repair_graph - Applying modification N-ter to residue B-ALA1
+   DEBUG - step - vermouth.processors.repair_graph - Matching residue B-ALA1 to its reference
+   DEBUG - step - vermouth.processors.repair_graph - Matching residue B-ALA2 to its reference
+   DEBUG - step - vermouth.processors.repair_graph - Matching residue B-CYS3 to its reference
+   DEBUG - step - vermouth.processors.repair_graph - Repairing residue ALA1
+   DEBUG - step - vermouth.processors.repair_graph - Repairing residue ALA2
+   DEBUG - step - vermouth.processors.repair_graph - Repairing residue CYS3
+   DEBUG - step - vermouth.processors.repair_graph - Repairing residue ALA1
+   DEBUG - step - vermouth.processors.repair_graph - Repairing residue ALA2
+   DEBUG - step - vermouth.processors.repair_graph - Repairing residue CYS3
+    INFO - step - vermouth - Dealing with modifications.
+    INFO - general - vermouth.processors.canonicalize_modifications - Identified the modifications ['N-ter', 'N-ter'] on residues ['ALA1', 'ALA1', 'ALA1', 'ALA1']
+    INFO - general - vermouth.processors.canonicalize_modifications - Identified the modifications ['C-ter', 'C-ter'] on residues ['CYS3']
+    INFO - step - vermouth - Read input.
+   DEBUG - step - vermouth - Read molecule molecule with 68 atoms, and 67 edges.
+    INFO - step - vermouth - Creating the graph at the target resolution.
+    INFO - general - vermouth.processors.do_mapping - Applying modification mapping ('N-ter',)
+    INFO - general - vermouth.processors.do_mapping - Applying modification mapping ('C-ter',)
+    INFO - general - vermouth.processors.do_mapping - Applying modification mapping ('N-ter',)
+    INFO - general - vermouth.processors.do_mapping - Applying modification mapping ('C-ter',)
+    INFO - step - vermouth - Averaging the coordinates.
+    INFO - step - vermouth - Applying the links.
+    INFO - step - vermouth - Placing the charge dummies.
+    INFO - step - vermouth - Sorting atomids
+    INFO - step - vermouth - Writing output.
+   DEBUG - step - vermouth - Writing molecule molecule_0 with 12 atoms, 11 edges, 10 bonds, 5 constraints, 16 angles, and 4 dihedrals.
+    INFO - model - vermouth - Disulfide bridge found between residues A-CYS3 and B-CYS6
+    INFO - general - vermouth.gmx.topology - Please cite: Souza, P C T; Alessandri, R; Barnoud, J; Thallmair, S; Faustino, I; Grünewald, F; Patmanidis, I; Abdizadeh, H; Bruininks, B M H; Wassenaar, T A; Kroon, P C; Melcr, J; Nieto, V; Corradi, V; Khan, H M; Domański, J; Javanainen, M; Martinez-Seara, H; Reuter, N; Best, R B; Vattulainen, I; Monticelli, L; Periole, X; Tieleman, D P; de Vries, A H; Marrink, S J;  Nature Methods 2021; 10.1038/s41592-021-01098-3
+   DEBUG - general - vermouth.file_writer - Writing output to /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/CG_setup_test/A_A_C/molecule_0.itp.
+   DEBUG - general - vermouth.file_writer - Writing output to /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/CG_setup_test/A_A_C/A_A_C_CG.top.
+   DEBUG - general - vermouth.file_writer - Writing output to /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/CG_setup_test/A_A_C/A_A_C_CG.pdb.
+    INFO - general - vermouth.processors.quote - Happiness is... finding two olives in your martini when you’re hungry. -- Johnny Carson

@@ -1,0 +1,53 @@
+                      :-) GROMACS - gmx grompp, 2024.2 (-:
+
+Executable:   /opt/apps/gromacs/2024.2/gcc/11.2.0/cuda/11.7.1/bin/gmx
+Data prefix:  /opt/apps/gromacs/2024.2/gcc/11.2.0/cuda/11.7.1
+Working dir:  /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/SIRAH/Setup_test/dim/C_A_A
+Command line:
+  gmx grompp -f /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/SIRAH/mdp_files/md_CGPROT.mdp -p C_A_A_SIRAH.top -po md.mdp -n C_A_A_CG_solvated2.ndx -c C_A_A_SIRAH_eq2.gro -o C_A_A_SIRAH_md.tpr
+
+Ignoring obsolete mdp entry 'title'
+Ignoring obsolete mdp entry 'cpp'
+Ignoring obsolete mdp entry 'optimize_fft'
+Ignoring obsolete mdp entry 'ns_type'
+Replacing old mdp entry 'nstxtcout' by 'nstxout-compressed'
+Generating 1-4 interactions: fudge = 0.5
+
+NOTE 1 [file C_A_A_SIRAH.top, line 180]:
+  The bond in molecule-type Protein_chain_A between atoms 1 GN and 2 GC has
+  an estimated oscillational period of 1.5e-01 ps, which is less than 10
+  times the time step of 2.0e-02 ps.
+  Maybe you forgot to change the constraints mdp option.
+
+Number of degrees of freedom in T-Coupling group Protein is 8999.64
+Number of degrees of freedom in T-Coupling group SIRAH-Solvent is 66729.36
+
+There was 1 NOTE
+
+GROMACS reminds you: "Nullis in verba [Nobody's word is final]." (Motto of the Royal Society)
+
+Setting the LD random seed to -538989989
+
+Generated 2362 of the 2556 non-bonded parameter combinations
+
+Generated 2556 of the 2556 1-4 parameter combinations
+
+Excluding 3 bonded neighbours molecule type 'Protein_chain_A'
+
+Excluding 3 bonded neighbours molecule type 'WT4'
+
+The largest distance between excluded atoms is 0.730 nm between atom 2422 and 2432
+
+Determining Verlet buffer for a tolerance of 0.005 kJ/mol/ps at 300 K
+
+Calculated rlist for 1x1 atom pair-list as 1.280 nm, buffer size 0.080 nm
+
+Set rlist, assuming 4x4 atom pair-list, to 1.225 nm, buffer size 0.025 nm
+
+Note that mdrun will redetermine rlist based on the actual pair-list setup
+Calculating fourier grid dimensions for X Y Z
+Using a fourier grid of 64x64x64, spacing 0.198 0.198 0.198
+
+Estimate for the relative computational load of the PME mesh part: 0.43
+
+This run will generate roughly 310 Mb of data

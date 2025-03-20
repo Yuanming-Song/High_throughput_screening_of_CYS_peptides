@@ -1,0 +1,97 @@
+                     :-) GROMACS - gmx pdb2gmx, 2024.2 (-:
+
+Executable:   /opt/apps/gromacs/2024.2/gcc/11.2.0/cuda/11.7.1/bin/gmx
+Data prefix:  /opt/apps/gromacs/2024.2/gcc/11.2.0/cuda/11.7.1
+Working dir:  /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/SIRAH/Setup_test/A_C_G
+Command line:
+  gmx pdb2gmx -f A_C_G_CG.pdb -o A_C_G_CG.gro -ff sirah -p A_C_G_SIRAH.top -merge all
+
+Opening force field file ./sirah.ff/watermodels.dat
+Opening force field file ./sirah.ff/dna.r2b
+All occupancy fields zero. This is probably not an X-Ray structure
+Opening force field file ./sirah.ff/atomtypes.atp
+Opening force field file ./sirah.ff/aminoacids.rtp
+Opening force field file ./sirah.ff/csh.rtp
+Opening force field file ./sirah.ff/dna.rtp
+Opening force field file ./sirah.ff/ligands.rtp
+Opening force field file ./sirah.ff/lipid.rtp
+Opening force field file ./sirah.ff/lipid_fragments.rtp
+Opening force field file ./sirah.ff/pep2.rtp
+Opening force field file ./sirah.ff/aminoacids.n.tdb
+Opening force field file ./sirah.ff/aminoacids.c.tdb
+21 out of 21 lines of specbond.dat converted successfully
+Opening force field file ./sirah.ff/dna.arn
+
+Long Bond (5-6 = 0.284335 nm)
+Before cleaning: 10 pairs
+Before cleaning: 10 dihedrals
+
+GROMACS reminds you: "We had the quaint notion at the time that software should be completely, absolutely free of bugs. Unfortunately it's a notion that never really quite caught on." (Mary Allen Wilkes)
+
+Using the Sirah force field in directory ./sirah.ff
+
+Select the Water Model:
+
+ 1: SIRAH solvent models
+
+ 2: None
+
+going to rename ./sirah.ff/dna.r2b
+Reading A_C_G_CG.pdb...
+Read '', 11 atoms
+
+Analyzing pdb file
+Splitting chemical chains based on TER records or chain id changing.
+
+There are 1 chains and 0 blocks of water and 3 residues with 11 atoms
+
+  chain  #res #atoms
+
+  1 'A'     3     11  
+
+All occupancy fields zero. This is probably not an X-Ray structure
+
+Reading residue database... (Sirah)
+
+Processing chain 1 'A' (11 atoms, 3 residues)
+
+Identified residue sA1 as a starting terminus.
+
+Identified residue sG3 as a ending terminus.
+Start terminus sA-1: Charged
+End terminus sG-3: Charged
+
+Checking for duplicate atoms....
+
+Generating any missing hydrogen atoms and/or adding termini.
+
+Now there are 3 residues with 11 atoms
+
+Making bonds...
+
+Long Bond (5-6 = 0.284335 nm)
+
+Number of bonds was 10, now 10
+
+Generating angles, dihedrals and pairs...
+
+Making cmap torsions...
+
+There are   10 dihedrals,    1 impropers,   10 angles
+            10 pairs,       10 bonds and     0 virtual sites
+
+Total mass 550.000 a.m.u.
+
+Total charge -0.000 e
+
+Writing topology
+
+Writing coordinate file...
+
+		--------- PLEASE NOTE ------------
+
+You have successfully generated a topology from: A_C_G_CG.pdb.
+
+The Sirah force field and the solv water model are used.
+
+		--------- ETON ESAELP ------------

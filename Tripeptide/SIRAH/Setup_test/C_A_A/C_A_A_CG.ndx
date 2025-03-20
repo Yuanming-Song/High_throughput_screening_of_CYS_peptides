@@ -1,0 +1,17 @@
+[ System ]
+   1    2    3    4    5    6    7    8    9   10   11
+[ Protein ]
+   1    2    3    4    5    6    7    8    9   10   11
+[ Protein-H ]
+   1    2    3    4    5    6    7    8    9   10   11
+[ C-alpha ]
+[ Backbone ]
+[ MainChain ]
+[ MainChain+Cb ]
+[ MainChain+H ]
+[ SideChain ]
+   1    2    3    4    5    6    7    8    9   10   11
+[ SideChain-H ]
+   1    2    3    4    5    6    7    8    9   10   11
+[ GN_GO ]
+   1    5    6    8    9   11

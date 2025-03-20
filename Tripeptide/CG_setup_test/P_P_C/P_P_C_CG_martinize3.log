@@ -1,0 +1,59 @@
+    INFO - general - vermouth.pdb.pdb - Read 1 molecules from PDB file P_P_C.pdb
+    INFO - step - vermouth - Guessing the bonds.
+   DEBUG - general - vermouth.processors.make_bonds - Guessed bond between 1A-PRO1:N and 2A-PRO1:HN1 based on distance.
+   DEBUG - general - vermouth.processors.make_bonds - Guessed bond between 1A-PRO1:N and 3A-PRO1:HN2 based on distance.
+   DEBUG - general - vermouth.processors.make_bonds - Guessed bond between 15A-PRO1:C and 17A-PRO2:N based on distance.
+   DEBUG - general - vermouth.processors.make_bonds - Guessed bond between 15A-PRO1:C and 18A-PRO2:CD based on distance.
+   DEBUG - general - vermouth.processors.make_bonds - Guessed bond between 29A-PRO2:C and 31A-CYS3:N based on distance.
+   DEBUG - general - vermouth.processors.make_bonds - Guessed bond between 39A-CYS3:C and 40A-CYS3:OT1 based on distance.
+   DEBUG - general - vermouth.processors.make_bonds - Guessed bond between 39A-CYS3:C and 41A-CYS3:OT2 based on distance.
+   DEBUG - general - vermouth.processors.make_bonds - Guessed bond between 42B-PRO1:N and 43B-PRO1:HN1 based on distance.
+   DEBUG - general - vermouth.processors.make_bonds - Guessed bond between 42B-PRO1:N and 44B-PRO1:HN2 based on distance.
+   DEBUG - general - vermouth.processors.make_bonds - Guessed bond between 56B-PRO1:C and 58B-PRO2:N based on distance.
+   DEBUG - general - vermouth.processors.make_bonds - Guessed bond between 56B-PRO1:C and 59B-PRO2:CD based on distance.
+   DEBUG - general - vermouth.processors.make_bonds - Guessed bond between 70B-PRO2:C and 72B-CYS3:N based on distance.
+   DEBUG - general - vermouth.processors.make_bonds - Guessed bond between 38A-CYS3:SG and 79B-CYS3:SG based on distance.
+   DEBUG - general - vermouth.processors.make_bonds - Guessed bond between 80B-CYS3:C and 81B-CYS3:OT1 based on distance.
+   DEBUG - general - vermouth.processors.make_bonds - Guessed bond between 80B-CYS3:C and 82B-CYS3:OT2 based on distance.
+    INFO - general - vermouth.processors.make_bonds - 1 molecules after guessing bonds
+   DEBUG - step - vermouth - Annotating required mutations and modifications.
+   DEBUG - general - vermouth.processors.annotate_mut_mod - Annotating A-PRO1 with modification N-ter
+   DEBUG - general - vermouth.processors.annotate_mut_mod - Annotating B-PRO1 with modification N-ter
+    INFO - step - vermouth - Repairing the graph.
+   DEBUG - step - vermouth.processors.repair_graph - Making reference graph
+    INFO - general - vermouth.processors.repair_graph - Applying modification N-ter to residue A-PRO1
+   DEBUG - step - vermouth.processors.repair_graph - Matching residue A-PRO1 to its reference
+   DEBUG - step - vermouth.processors.repair_graph - Matching residue A-PRO2 to its reference
+   DEBUG - step - vermouth.processors.repair_graph - Matching residue A-CYS3 to its reference
+    INFO - general - vermouth.processors.repair_graph - Applying modification N-ter to residue B-PRO1
+   DEBUG - step - vermouth.processors.repair_graph - Matching residue B-PRO1 to its reference
+   DEBUG - step - vermouth.processors.repair_graph - Matching residue B-PRO2 to its reference
+   DEBUG - step - vermouth.processors.repair_graph - Matching residue B-CYS3 to its reference
+   DEBUG - step - vermouth.processors.repair_graph - Repairing residue PRO1
+   DEBUG - step - vermouth.processors.repair_graph - Repairing residue PRO2
+   DEBUG - step - vermouth.processors.repair_graph - Repairing residue CYS3
+   DEBUG - step - vermouth.processors.repair_graph - Repairing residue PRO1
+   DEBUG - step - vermouth.processors.repair_graph - Repairing residue PRO2
+   DEBUG - step - vermouth.processors.repair_graph - Repairing residue CYS3
+    INFO - step - vermouth - Dealing with modifications.
+    INFO - general - vermouth.processors.canonicalize_modifications - Identified the modifications ['N-ter', 'N-ter'] on residues ['PRO1', 'PRO1', 'PRO1', 'PRO1']
+    INFO - general - vermouth.processors.canonicalize_modifications - Identified the modifications ['C-ter', 'C-ter'] on residues ['CYS3']
+    INFO - step - vermouth - Read input.
+   DEBUG - step - vermouth - Read molecule molecule with 84 atoms, and 89 edges.
+    INFO - step - vermouth - Creating the graph at the target resolution.
+    INFO - general - vermouth.processors.do_mapping - Applying modification mapping ('N-ter',)
+    INFO - general - vermouth.processors.do_mapping - Applying modification mapping ('C-ter',)
+    INFO - general - vermouth.processors.do_mapping - Applying modification mapping ('N-ter',)
+    INFO - general - vermouth.processors.do_mapping - Applying modification mapping ('C-ter',)
+    INFO - step - vermouth - Averaging the coordinates.
+    INFO - step - vermouth - Applying the links.
+    INFO - step - vermouth - Placing the charge dummies.
+    INFO - step - vermouth - Sorting atomids
+    INFO - step - vermouth - Writing output.
+   DEBUG - step - vermouth - Writing molecule molecule_0 with 12 atoms, 13 edges, 10 bonds, 1 constraints, 12 angles, and 2 dihedrals.
+    INFO - model - vermouth - Disulfide bridge found between residues A-CYS3 and B-CYS6
+    INFO - general - vermouth.gmx.topology - Please cite: Souza, P C T; Alessandri, R; Barnoud, J; Thallmair, S; Faustino, I; Grünewald, F; Patmanidis, I; Abdizadeh, H; Bruininks, B M H; Wassenaar, T A; Kroon, P C; Melcr, J; Nieto, V; Corradi, V; Khan, H M; Domański, J; Javanainen, M; Martinez-Seara, H; Reuter, N; Best, R B; Vattulainen, I; Monticelli, L; Periole, X; Tieleman, D P; de Vries, A H; Marrink, S J;  Nature Methods 2021; 10.1038/s41592-021-01098-3
+   DEBUG - general - vermouth.file_writer - Writing output to /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/CG_setup_test/P_P_C/molecule_0.itp.
+   DEBUG - general - vermouth.file_writer - Writing output to /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/CG_setup_test/P_P_C/P_P_C_CG.top.
+   DEBUG - general - vermouth.file_writer - Writing output to /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/CG_setup_test/P_P_C/P_P_C_CG.pdb.
+    INFO - general - vermouth.processors.quote - Zen martini: A martini with no vermouth at all. And no gin, either. -- P.J. O’Rourke

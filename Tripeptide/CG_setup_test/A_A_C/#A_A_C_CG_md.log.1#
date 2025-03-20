@@ -1,0 +1,38 @@
+                      :-) GROMACS - gmx mdrun, 2022.1 (-:
+
+Executable:   /opt/apps/gromacs/2022.1/gcc/8.4.0/cuda/11.7.1/bin/gmx
+Data prefix:  /opt/apps/gromacs/2022.1/gcc/8.4.0/cuda/11.7.1
+Working dir:  /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/CG_setup_test/A_A_C
+Command line:
+  gmx mdrun -nt 10 -deffnm A_A_C_CG_md
+
+
+Back Off! I just backed up A_A_C_CG_md.log to ./#A_A_C_CG_md.log.1#
+Compiled SIMD: AVX2_128, but for this host/run AVX_512 might be better (see
+log).
+Reading file A_A_C_CG_md.tpr, VERSION 2022.1 (single precision)
+Changing nstlist from 20 to 25, rlist from 1.257 to 1.32
+
+Using 1 MPI thread
+
+Non-default thread affinity set, disabling internal thread affinity
+
+Using 10 OpenMP threads 
+
+starting mdrun 'Title of the system'
+2000000 steps,  50000.0 ps.
+
+
+Received the INT signal, stopping within 25 steps
+
+
+NOTE: 10 % of the run time was spent in pair search,
+      you might want to increase nstlist (this has no effect on accuracy)
+
+               Core t (s)   Wall t (s)        (%)
+       Time:     4152.102      415.211     1000.0
+                 (ns/day)    (hour/ns)
+Performance:     3583.005        0.007
+
+GROMACS reminds you: "This May Come As a Shock" (F. Black)
+

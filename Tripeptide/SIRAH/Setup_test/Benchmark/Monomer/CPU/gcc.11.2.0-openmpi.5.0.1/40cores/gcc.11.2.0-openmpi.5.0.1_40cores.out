@@ -1,0 +1,35 @@
+                      :-) GROMACS - gmx mdrun, 2024.2 (-:
+
+Executable:   /opt/apps/gromacs/2024.2/gcc/11.2.0/openmpi/5.0.1/bin/gmx_mpi
+Data prefix:  /opt/apps/gromacs/2024.2/gcc/11.2.0/openmpi/5.0.1
+Working dir:  /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/SIRAH/Setup_test/Benchmark/gcc.11.2.0-openmpi.5.0.1/40cores
+Command line:
+  gmx_mpi mdrun -s /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/SIRAH/Setup_test/Benchmark/C_A_A_SIRAH_md.tpr -deffnm C_A_A_SIRAH_md
+
+
+Back Off! I just backed up C_A_A_SIRAH_md.log to ./#C_A_A_SIRAH_md.log.3#
+Compiled SIMD is AVX2_128, but AVX_512 might be faster (see log).
+Reading file /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/SIRAH/Setup_test/Benchmark/C_A_A_SIRAH_md.tpr, VERSION 2024.2 (single precision)
+Changing nstlist from 10 to 25, rlist from 1.224 to 1.396
+
+Using 1 MPI process
+Using 40 OpenMP threads 
+
+
+Back Off! I just backed up C_A_A_SIRAH_md.xtc to ./#C_A_A_SIRAH_md.xtc.3#
+
+Back Off! I just backed up C_A_A_SIRAH_md.edr to ./#C_A_A_SIRAH_md.edr.3#
+starting mdrun 'Protein in water'
+10000 steps,    200.0 ps.
+
+Writing final coordinates.
+
+Back Off! I just backed up C_A_A_SIRAH_md.gro to ./#C_A_A_SIRAH_md.gro.3#
+
+               Core t (s)   Wall t (s)        (%)
+       Time:      380.481        9.513     3999.6
+                 (ns/day)    (hour/ns)
+Performance:     1816.662        0.013
+
+GROMACS reminds you: "There is an infinite set A that is not too big." (John von Neumann)
+

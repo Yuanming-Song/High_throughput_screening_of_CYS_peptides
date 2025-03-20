@@ -1,0 +1,29 @@
+ATOM      1 BB   PRO A   1       1.054   1.680   0.502  1.00  0.00              
+ATOM      2 SC1  PRO A   1      -1.338   2.552  -0.554  1.00  0.00              
+ATOM      3 BB   HSD A   2       4.372   1.451   1.117  1.00  0.00              
+ATOM      4 SC1  HSD A   2       4.767  -0.035  -0.892  1.00  0.00              
+ATOM      5 SC2  HSD A   2       6.721  -0.132  -2.318  1.00  0.00              
+ATOM      6 SC3  HSD A   2       6.444  -1.793  -0.847  1.00  0.00              
+ATOM      7 BB   CYS A   3       6.947  -0.877   2.859  1.00  0.00              
+ATOM      8 SC1  CYS A   3       7.634   2.358   4.044  1.00  0.00              
+ATOM      9 BB   PRO B   4       9.895  10.883   8.670  1.00  0.00              
+ATOM     10 SC1  PRO B   4       7.526  12.184   8.501  1.00  0.00              
+ATOM     11 BB   HSD B   5      10.017   7.205   8.284  1.00  0.00              
+ATOM     12 SC1  HSD B   5      12.825   7.599   8.386  1.00  0.00              
+ATOM     13 SC2  HSD B   5      14.669   8.171   6.934  1.00  0.00              
+ATOM     14 SC3  HSD B   5      14.458   6.114   7.779  1.00  0.00              
+ATOM     15 BB   CYS B   6      11.578   3.594   7.243  1.00  0.00              
+ATOM     16 SC1  CYS B   6       9.401   3.431   5.268  1.00  0.00              
+TER      17      CYS B   6 
+CONECT    1    2    3
+CONECT    3    4    7
+CONECT    4    5    6
+CONECT    5    6
+CONECT    7    8
+CONECT    8   16
+CONECT    9   10   11
+CONECT   11   12   15
+CONECT   12   13   14
+CONECT   13   14
+CONECT   15   16
+END   

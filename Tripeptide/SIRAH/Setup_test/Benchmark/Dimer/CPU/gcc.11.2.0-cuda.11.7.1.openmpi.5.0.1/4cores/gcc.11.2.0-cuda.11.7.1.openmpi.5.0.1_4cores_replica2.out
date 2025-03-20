@@ -1,0 +1,30 @@
+                      :-) GROMACS - gmx mdrun, 2024.2 (-:
+
+Executable:   /opt/apps/gromacs/2024.2/gcc/11.2.0/cuda/11.7.1/openmpi/5.0.1/bin/gmx_mpi
+Data prefix:  /opt/apps/gromacs/2024.2/gcc/11.2.0/cuda/11.7.1/openmpi/5.0.1
+Working dir:  /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/SIRAH/Setup_test/Benchmark/Dimer/CPU/gcc.11.2.0-cuda.11.7.1.openmpi.5.0.1/4cores
+Command line:
+  gmx_mpi mdrun -s /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/SIRAH/Setup_test/Benchmark/Dimer/C_A_A_SIRAH_md.tpr -deffnm C_A_A_SIRAH_md_replica2
+
+Compiled SIMD is AVX2_128, but AVX_512 might be faster (see log).
+Reading file /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/SIRAH/Setup_test/Benchmark/Dimer/C_A_A_SIRAH_md.tpr, VERSION 2024.2 (single precision)
+Changing nstlist from 10 to 25, rlist from 1.225 to 1.398
+
+Using 1 MPI process
+
+Non-default thread affinity set, disabling internal thread affinity
+
+Using 4 OpenMP threads 
+
+starting mdrun 'Protein in water'
+10000 steps,    200.0 ps.
+
+Writing final coordinates.
+
+               Core t (s)   Wall t (s)        (%)
+       Time:      190.467       47.617      400.0
+                 (ns/day)    (hour/ns)
+Performance:      362.928        0.066
+
+GROMACS reminds you: "The road to openness is paved with git commits" (Vedran Miletic)
+

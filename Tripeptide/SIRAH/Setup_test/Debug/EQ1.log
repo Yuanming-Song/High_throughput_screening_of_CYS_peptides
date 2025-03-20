@@ -1,0 +1,34 @@
+                      :-) GROMACS - gmx mdrun, 2024.2 (-:
+
+Executable:   /opt/apps/gromacs/2024.2/gcc/11.2.0/cuda/11.7.1/openmpi/5.0.1/bin/gmx_mpi
+Data prefix:  /opt/apps/gromacs/2024.2/gcc/11.2.0/cuda/11.7.1/openmpi/5.0.1
+Working dir:  /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/SIRAH/Setup_test/H_C_E
+Command line:
+  gmx_mpi mdrun -deffnm H_C_E_SIRAH_eq1
+
+
+Back Off! I just backed up H_C_E_SIRAH_eq1.log to ./#H_C_E_SIRAH_eq1.log.4#
+Compiled SIMD is AVX2_128, but AVX_512 might be faster (see log).
+Reading file H_C_E_SIRAH_eq1.tpr, VERSION 2024.2 (single precision)
+Changing nstlist from 10 to 25, rlist from 1.211 to 1.369
+
+Using 1 MPI process
+
+Non-default thread affinity set, disabling internal thread affinity
+
+Using 10 OpenMP threads 
+
+
+Back Off! I just backed up H_C_E_SIRAH_eq1.xtc to ./#H_C_E_SIRAH_eq1.xtc.4#
+
+Back Off! I just backed up H_C_E_SIRAH_eq1.edr to ./#H_C_E_SIRAH_eq1.edr.4#
+starting mdrun 'Protein in water'
+100000 steps,   2000.0 ps.
+[hpc3-20-00:170256:0:170262] Caught signal 11 (Segmentation fault: address not mapped to object at address 0xfffffffff97d8430)
+==== backtrace (tid: 170262) ====
+ 0 0x0000000000012cf0 __funlockfile()  :0
+ 1 0x0000000000df28d9 spread_on_grid()  ???:0
+ 2 0x000000000001da56 gomp_thread_start()  ???:0
+ 3 0x00000000000081ca start_thread()  ???:0
+ 4 0x0000000000039e73 __GI___clone()  :0
+=================================

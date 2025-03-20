@@ -1,0 +1,30 @@
+                      :-) GROMACS - gmx mdrun, 2024.2 (-:
+
+Executable:   /opt/apps/gromacs/2024.2/gcc/11.2.0/cuda/11.7.1/bin/gmx
+Data prefix:  /opt/apps/gromacs/2024.2/gcc/11.2.0/cuda/11.7.1
+Working dir:  /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/SIRAH/Setup_test/Benchmark/gcc.11.2.0-cuda.11.7.1/16cores
+Command line:
+  gmx mdrun -s /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/SIRAH/Setup_test/Benchmark/C_A_A_SIRAH_md.tpr -deffnm C_A_A_SIRAH_md_replica2
+
+Compiled SIMD is AVX2_128, but AVX_512 might be faster (see log).
+Reading file /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/SIRAH/Setup_test/Benchmark/C_A_A_SIRAH_md.tpr, VERSION 2024.2 (single precision)
+Changing nstlist from 10 to 25, rlist from 1.224 to 1.396
+
+Using 1 MPI thread
+
+Non-default thread affinity set, disabling internal thread affinity
+
+Using 16 OpenMP threads 
+
+starting mdrun 'Protein in water'
+10000 steps,    200.0 ps.
+
+Writing final coordinates.
+
+               Core t (s)   Wall t (s)        (%)
+       Time:      235.754       14.735     1599.9
+                 (ns/day)    (hour/ns)
+Performance:     1172.816        0.020
+
+GROMACS reminds you: "Your Country Raised You, Your Country Fed You, and Just Like Any Other Country it Will Break You" (Gogol Bordello)
+

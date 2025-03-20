@@ -1,0 +1,13 @@
+#include "/dfs9/tw/yuanmis1/mrsec/ff/MARTINI3/martini_v3.0.0.itp"
+#include "/dfs9/tw/yuanmis1/mrsec/ff/MARTINI3/martini_v3.0.0_ions_v1.itp"
+#include "/dfs9/tw/yuanmis1/mrsec/ff/MARTINI3/martini_v3.0.0_solvents_v1.itp" 
+
+#include "A_A_C_A+A_A_C_B.itp"
+
+[ system ]
+Title of the system
+
+[ molecules ]
+A_A_C_A+A_A_C_B    150
+
+W 15644

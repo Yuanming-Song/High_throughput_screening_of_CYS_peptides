@@ -1,0 +1,37 @@
+                      :-) GROMACS - gmx grompp, 2024.2 (-:
+
+Executable:   /opt/apps/gromacs/2024.2/gcc/11.2.0/cuda/11.7.1/bin/gmx
+Data prefix:  /opt/apps/gromacs/2024.2/gcc/11.2.0/cuda/11.7.1
+Working dir:  /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/SIRAH/Setup_test/A_C_G
+Command line:
+  gmx grompp -f /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/SIRAH/mdp_files/em2_CGPROT.mdp -p A_C_G_SIRAH.top -po em2.mdp -n A_C_G_CG_solvated2.ndx -c A_C_G_SIRAH_em1.gro -o A_C_G_SIRAH_em2.tpr
+
+Ignoring obsolete mdp entry 'title'
+Ignoring obsolete mdp entry 'cpp'
+Ignoring obsolete mdp entry 'optimize_fft'
+Ignoring obsolete mdp entry 'ns_type'
+Replacing old mdp entry 'nstxtcout' by 'nstxout-compressed'
+Replacing old mdp entry 'xtc-precision' by 'compressed-x-precision'
+Generating 1-4 interactions: fudge = 0.5
+Number of degrees of freedom in T-Coupling group rest is 74709.00
+The integrator does not provide a ensemble temperature, there is no system ensemble temperature
+
+GROMACS reminds you: "I do not believe continuum electrostatics" (Arieh Warshel, Nobel lecture 2013)
+
+Setting the LD random seed to -21234834
+
+Generated 2362 of the 2556 non-bonded parameter combinations
+
+Generated 2556 of the 2556 1-4 parameter combinations
+
+Excluding 3 bonded neighbours molecule type 'Protein_chain_A'
+
+Excluding 3 bonded neighbours molecule type 'WT4'
+
+The largest distance between excluded atoms is 0.569 nm between atom 831 and 834
+Calculating fourier grid dimensions for X Y Z
+Using a fourier grid of 72x72x72, spacing 0.181 0.181 0.181
+
+Estimate for the relative computational load of the PME mesh part: 0.48
+
+This run will generate roughly 210 Mb of data

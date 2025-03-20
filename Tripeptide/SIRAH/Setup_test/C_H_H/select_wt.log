@@ -1,0 +1,16 @@
+                      :-) GROMACS - gmx select, 2024.2 (-:
+
+Executable:   /opt/apps/gromacs/2024.2/gcc/11.2.0/cuda/11.7.1/bin/gmx
+Data prefix:  /opt/apps/gromacs/2024.2/gcc/11.2.0/cuda/11.7.1
+Working dir:  /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/SIRAH/Setup_test/C_H_H
+Command line:
+  gmx select -f C_H_H_CG_solvated.gro -s C_H_H_CG_solvated_em1.tpr -n C_H_H_CG_solvated.ndx -on rm_close_wt4.ndx -select 'not (same residue as (resname WT4 and within 0.3 of group Protein))'
+
+Reading file C_H_H_CG_solvated_em1.tpr, VERSION 2024.2 (single precision)
+Reading file C_H_H_CG_solvated_em1.tpr, VERSION 2024.2 (single precision)
+Reading frames from gro file 'Giant Rising Ordinary Mutants for A Clerical Setup', 26340 atoms.
+Reading frame       0 time    0.000   Last frame          0 time    0.000   
+Analyzed 1 frames, last time 0.000
+
+GROMACS reminds you: "For those who want some proof that physicists are human, the proof is in the idiocy of all the different units which they use for measuring energy." (Richard Feynman)
+

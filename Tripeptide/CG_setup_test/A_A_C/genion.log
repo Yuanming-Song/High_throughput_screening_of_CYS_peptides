@@ -1,0 +1,14 @@
+                      :-) GROMACS - gmx genion, 2022.1 (-:
+
+Executable:   /opt/apps/gromacs/2022.1/gcc/8.4.0/cuda/11.7.1/bin/gmx
+Data prefix:  /opt/apps/gromacs/2022.1/gcc/8.4.0/cuda/11.7.1
+Working dir:  /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/CG_setup_test/A_A_C
+Command line:
+  gmx genion -s minimization.tpr -o A_A_C_CG_solvated_ions.gro -neutral -rmin 0.5
+
+Reading file minimization.tpr, VERSION 2022.1 (single precision)
+Reading file minimization.tpr, VERSION 2022.1 (single precision)
+No ions to add, will just copy input configuration.
+
+GROMACS reminds you: "With a Lead Filled Snowshoe" (F. Zappa)
+
