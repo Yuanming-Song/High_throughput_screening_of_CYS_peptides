@@ -1,16 +1,0 @@
-                      :-) GROMACS - gmx select, 2024.2 (-:
-
-Executable:   /opt/apps/gromacs/2024.2/gcc/11.2.0/cuda/11.7.1/bin/gmx
-Data prefix:  /opt/apps/gromacs/2024.2/gcc/11.2.0/cuda/11.7.1
-Working dir:  /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/SIRAH/Setup_test/G_A_C
-Command line:
-  gmx select -f G_A_C_CG_solvated.gro -s G_A_C_CG_solvated_em1.tpr -n G_A_C_CG_solvated.ndx -on rm_close_wt4.ndx -select 'not (same residue as (resname WT4 and within 0.3 of group Protein))'
-
-Reading file G_A_C_CG_solvated_em1.tpr, VERSION 2024.2 (single precision)
-Reading file G_A_C_CG_solvated_em1.tpr, VERSION 2024.2 (single precision)
-Reading frames from gro file 'GRoups of Organic Molecules in ACtion for Science', 25348 atoms.
-Reading frame       0 time    0.000   Last frame          0 time    0.000   
-Analyzed 1 frames, last time 0.000
-
-GROMACS reminds you: "It is disconcerting to reflect on the number of students we have flunked in chemistry for not knowing what we later found to be untrue." (Robert L. Weber)
-
