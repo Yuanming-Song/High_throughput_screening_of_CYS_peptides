@@ -1,0 +1,1 @@
+Di-, Tri-, and Tetrapeptide dir contains scripts to setup and slurm job submission files for CGMD simulations of all single cystine containing sequences of both monomer and disulfide linked dimer simulations.
