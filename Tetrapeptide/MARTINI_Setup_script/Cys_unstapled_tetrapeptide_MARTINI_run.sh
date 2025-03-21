@@ -84,7 +84,7 @@ if [ -f "solvate.log" ]; then
     # Replace placeholder in ${arg1}_${arg2}_${arg3}_${arg4}_CG.top with watnum
 
     # Use sed to find the line, modify the number, and add a new line after it
-    sed -i "/${arg1}_${arg2}_${arg3}_${arg4}_A+${arg1}_${arg2}_${arg3}_${arg4}_B/s/1/150/" ${arg1}_${arg2}_${arg3}_${arg4}_CG.top
+    sed -i "/${arg1}_${arg2}_${arg3}_${arg4}_A/s/1/${ncopy}/" ${arg1}_${arg2}_${arg3}_${arg4}_CG.top
     echo -e "\nW ${watnum}" >>${arg1}_${arg2}_${arg3}_${arg4}_CG.top
 
     # Use sed to insert lines at the beginning of the file
@@ -115,10 +115,10 @@ echo "grompp equalibration is done, check gromppEqu.log file"
 gmx mdrun -deffnm equilibration -v >equilibration.log 2>&1
 echo "Equalibration is done, check equilibration.log file"
 #Generate first dynamics tpr file
-gmx grompp -p ${arg1}_${arg2}_${arg3}_${arg4}_CG.top -c equilibration.gro -f /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/Tripeptide/SetupScript/dynamic.mdp -o ${arg1}_${arg2}_${arg3}_${arg4}_CG_md.tpr -maxwarn 1 >gromppMD.log 2>&1
+gmx grompp -p ${arg1}_${arg2}_${arg3}_${arg4}_CG.top -c equilibration.gro -f /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/Tripeptide/MARTINI_Setup_script/dynamic.mdp -o ${arg1}_${arg2}_${arg3}_${arg4}_CG_md.tpr -maxwarn 1 >gromppMD.log 2>&1
 echo "grompp MD production is done, check gromppMD.log file"
 #generate psf file for easy viewing in VMD
-/dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/Tripeptide/SetupScript/getMARTINIpsf.sh -b ${arg1}_${arg2}_${arg3}_${arg4}_CG
+/dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/Tripeptide/MARTINI_Setup_script/getMARTINIpsf.sh -b ${arg1}_${arg2}_${arg3}_${arg4}_CG
 echo "MD production run is going, check ${arg1}_${arg2}_${arg3}_${arg4}_CG_md.log"
 #Run the dynamic
 gmx mdrun -nt $SLURM_CPUS_PER_TASK -deffnm ${arg1}_${arg2}_${arg3}_${arg4}_CG_md >${arg1}_${arg2}_${arg3}_${arg4}_CG_md.log 2>&1
