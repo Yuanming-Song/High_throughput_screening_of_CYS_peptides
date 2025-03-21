@@ -6,3 +6,4 @@ Edgelist is for edgelist of each peptide
 
 gyrt is gyration tensor for analyzing the shape of the aggregates
 
+AP analysis is for aggregation propensity score calculation
