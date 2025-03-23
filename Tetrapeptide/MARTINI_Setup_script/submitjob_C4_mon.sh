@@ -23,7 +23,7 @@ for amino1 in "${amino_acids[@]}"; do
                 --nodes=1 \
                 --ntasks-per-node=1 \
                 --cpus-per-task=40 \
-                --time=24:00:00 \
+                --time=4:00:00 \
                 --out=out/C_${amino1}_${amino2}_${amino3}.out \
                 --wrap="bash //dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/Tetrapeptide/MARTINI_Setup_script/Cys_unstapled_tetrapeptide_MARTINI_run.sh C ${amino1} ${amino2} ${amino3}"
         done

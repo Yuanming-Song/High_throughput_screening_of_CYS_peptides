@@ -30,8 +30,12 @@ for aa1 in "${amino_acids[@]}"; do
                     fi
                 done
 
+                #if cindex is not 1, next
+                if [ "$cindex" -ne 1 ]; then
+                    continue
+                fi
                 # Define directory path
-                cindex_dir="$maindir/Tetrapeptide_dis_C${cindex}"
+                cindex_dir="$maindir/Tetrapeptide_mon_C${cindex}"
                 peptide_dir="$cindex_dir/${jobname}"
 
                 # Check if peptide folder exists
@@ -61,9 +65,9 @@ for aa1 in "${amino_acids[@]}"; do
                     --nodes=1 \
                     --ntasks-per-node=1 \
                     --cpus-per-task=40 \
-                    --time=24:00:00 \
+                    --time=4:00:00 \
                     --out=out/${jobname}.out \
-                    --wrap="bash //dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/Tetrapeptide/MARTINI_Setup_script/Cys_stapled_tetrapeptide_MARTINI_run.sh ${aa1} ${aa2} ${aa3} ${aa4}"
+                    --wrap="bash //dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/Tetrapeptide/MARTINI_Setup_script/Cys_unstapled_tetrapeptide_MARTINI_run.sh ${aa1} ${aa2} ${aa3} ${aa4}"
                 # Return to the original directory
                 cd "$maindir" || exit
 
