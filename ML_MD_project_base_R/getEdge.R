@@ -1,4 +1,4 @@
-getEdge<-function(dimerized) {
+getEdge<-function(simtraj,dimerized, single_node=FALSE) {
   
   # Initialize variables
   resno_sequence <- simtraj$top$resno
@@ -29,7 +29,7 @@ getEdge<-function(dimerized) {
   
   
   
-  # Example construction of AtomTypeLib
+  # Construction of AtomTypeLib
   first_monomer_indices <- 1:numatom
   elety_subset <- simtraj$top$elety[first_monomer_indices]
   
@@ -59,6 +59,7 @@ getEdge<-function(dimerized) {
   # Loop through each residue
   for (trures_index in 1:length(seen_resno)) {
     if (trures_index>peptide_length) {
+      #since the second part of dimer is the same as first 
       res_index<-trures_index-peptide_length
     } else {
       res_index<-trures_index 
@@ -84,8 +85,14 @@ getEdge<-function(dimerized) {
   
   
   # Determine step size
+
   step_size <- if (dimerized) numatom * 2 else numatom
   
+#want to treat each monomer as a node?
+if (single_node) {
+  step_size <- numatom
+}
+
   # Iterate through `resno` for molecules
   for (molecule_index in 1:2000) {
     # Calculate start and end indices for this molecule
@@ -108,7 +115,7 @@ getEdge<-function(dimerized) {
   }
   #get cluster size histogram for all frame, and add them up, return the result directly
   foreach(frame=framei:dim(simtraj$coord)[3]) %dopar% (
-    getedge_base(frame,AtomIndexLib, cutoff_matrix, AtomIndexList, AtomTypeLib)
+    getedge_base(simtraj,frame,AtomIndexLib, cutoff_matrix, AtomIndexList, AtomTypeLib, single_node)
   )
   
 }

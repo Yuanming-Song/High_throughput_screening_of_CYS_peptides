@@ -1,3 +1,6 @@
+#want to treat each monomer in dimer as single node?
+single_node<-TRUE
+
 .libPaths("/dfs9/tw/yuanmis1/R_libs/")
 #log file for checking simulation length etc
 requiredpackages<-c(
@@ -100,12 +103,13 @@ for (pos in positions) {
       dimerized <- ifelse(state == "dis", 1, 0)
       
       
-      edgelist<-getEdge(dimerized)
+      edgelist<-getEdge(simtraj,dimerized,single_node)
       
       # Append sizehis to the appropriate data frame
       if (exists("edgelist")) {
         if (state == "dis") {
-          save(edgelist,file=file.path(outdir,"dimer",paste0(seq,".rda")))
+                    save(edgelist,file=file.path(outdir,"dimer",paste0(seq,if (single_node) "_single_node" else "",".rda")))
+
         } else {
           save(edgelist,file=file.path(outdir,"monomer",paste0(seq,".rda")))
         }
@@ -126,7 +130,7 @@ for (pos in positions) {
       rm(edgelist)
       rm(sizehis)
     }
-    save(dimer_sizehis,file=file.path(csizedir,"dimer_cdist_tripeptide.rda"))
+    save(dimer_sizehis,file=file.path(csizedir,paste0("dimer_cdist_tripeptide",if (single_node) "_single_node" else "",".rda")))
     save(monomer_sizehis,file=file.path(csizedir,"monomer_cdist_tripeptide.rda"))
   }
 }

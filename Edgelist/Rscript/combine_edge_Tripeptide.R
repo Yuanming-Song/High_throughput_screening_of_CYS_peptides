@@ -1,3 +1,5 @@
+#Treat each monomer as single node?
+single_node<-TRUE
 # define maindir
 main_dir <- "/dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/Edgelist/Tripeptide/"
 missing_log<-"missing_edge_Tripeptide"
@@ -35,7 +37,8 @@ if (length(all_tripeptides) != expected_count) {
 }
 
 # Define the states to process (e.g., dimer and monomer)
-states <- c("dimer", "monomer")
+states <- c("dimer"#, "monomer"
+	    )
 
 # Loop through each state
 for (state in states) {
@@ -47,7 +50,7 @@ for (state in states) {
   for (seq in all_tripeptides) {
     # Construct the full simulation directory for this sequence
     # (Assuming that under main_dir/state/ the file for a sequence is named "SEQ.rda")
-    rda_file <- file.path(main_dir, state, paste0(seq, ".rda"))
+    rda_file <- file.path(main_dir, state, paste0(seq, if (single_node) "_single_node" else "",".rda"))
     
     # If the .rda file does not exist, log the missing file and continue
     if (!file.exists(rda_file)) {
@@ -64,7 +67,7 @@ for (state in states) {
   close(log_con)
   
   # Save the cumulative edgelist for this state as "tripeptide_edgelist_<state>.rda" in main_dir
-  out_rda <- file.path(main_dir, paste0("tripeptide_edgelist_", state, ".rda"))
+  out_rda <- file.path(main_dir, paste0("tripeptide_edgelist_", state, if (single_node) "_single_node" else "",".rda"))
   edgelist <- tempedgelist
   save(edgelist, file = out_rda)
 }

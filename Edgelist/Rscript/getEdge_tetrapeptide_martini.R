@@ -12,8 +12,9 @@ requiredpackages<-c(
   ,"SOMMD"
   ,"Rcpp"
 )
-statelist<-c("dis"
-             #, "mon"
+statelist<-c(#"dis"
+           #  ,
+	     "mon"
 )
 framei<-200
 #clustersize bin width
@@ -130,8 +131,8 @@ for (seq in sequences) {
     rm(edgelist)
     rm(sizehis)
   }
-  save(dimer_sizehis,file=file.path(csizedir,paste(pos,inpres,"dimer_cdist_Tetrapeptide.rda",sep="_")))
-  #save(monomer_sizehis,file=file.path(csizedir,paste(pos,inpres,"monomer_cdist_Tetrapeptide.rda",sep="_")))
+  #save(dimer_sizehis,file=file.path(csizedir,paste(pos,inpres,"dimer_cdist_Tetrapeptide.rda",sep="_")))
+  save(monomer_sizehis,file=file.path(csizedir,paste(pos,inpres,"monomer_cdist_Tetrapeptide.rda",sep="_")))
 }
 
 
