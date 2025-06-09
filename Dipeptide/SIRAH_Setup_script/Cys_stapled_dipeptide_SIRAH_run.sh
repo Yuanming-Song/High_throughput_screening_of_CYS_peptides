@@ -1,8 +1,10 @@
 #!/bin/bash
-#location for mdp files 
-mdpdir=/dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/Tripeptide/SIRAH/Setup_test/mdp_files_longer/
+# Define base directory variable
+BASEDIR="/dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide"
 
-mdpdir="/dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/Tripeptide/SIRAH/mdp_files/"
+#location for mdp files 
+mdpdir="$BASEDIR/Tripeptide/SIRAH/Setup_test/mdp_files_longer/"
+mdpdir="$BASEDIR/Tripeptide/SIRAH_Setup_script/mdp_files/"
 #radius for insert molecule
 radius=0.5
 # box size
@@ -11,21 +13,28 @@ box_size_nm=11
 # how many copies of peptide to put in
 ncopy=150
 #SIRAH CG script
-SIRAH="/dfs9/tw/yuanmis1/mrsec/ff/sirah.ff/tools/CGCONV/cgconv.pl"
+SIRAH="$BASEDIR/../ff/sirah.ff/tools/CGCONV/cgconv.pl"
 #ff file location
-SIRAHff="/dfs9/tw/yuanmis1/mrsec/ff/sirah.ff/"
+SIRAHff="$BASEDIR/../ff/sirah.ff/"
 #Load gromacs
 module load gromacs/2024.2/gcc.11.2.0-cuda.11.7.1.openmpi.5.0.1
 
-# Check if exactly three arguments are provided
-if [ "$#" -ne 2 ]; then
-    echo "Usage: $0 <arg1> <arg2>"
+# Check if exactly two or three arguments are provided
+if [ "$#" -lt 2 ] || [ "$#" -gt 3 ]; then
+    echo "Usage: $0 <arg1> <arg2> [box_size_nm]"
     exit 1
 fi
 
 # Assign arguments to variables
 arg1=$1
 arg2=$2
+if [ "$#" -eq 3 ]; then
+    box_size_nm=$3
+    inibox_size=$3
+else
+    box_size_nm=11
+    inibox_size=11.5
+fi
 echo "${arg1}_${arg2}"
 # Define the directory name
 dir_name="${arg1}_${arg2}"
@@ -50,7 +59,7 @@ elif [ "$arg2" == "C" ]; then
 fi
 
 # Use a linear peptide template, mutate residue based on input
-/dfs9/tw/yuanmis1/vmd/bin/vmd -dispdev none -e /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/Dipeptide/SetupScript/mutate_template_dipeptide.tcl -args ${arg1} ${arg2}  AA_template_dimer_C$IndexC > mutate_${arg1}_${arg2}.log 2>&1
+/dfs9/tw/yuanmis1/vmd/bin/vmd -dispdev none -e $BASEDIR/Dipeptide/AA_template_script/mutate_template_dipeptide.tcl -args ${arg1} ${arg2}  AA_template_dimer_C$IndexC > mutate_${arg1}_${arg2}.log 2>&1
 # Check if any of the arguments is H
 if [[ "$arg1" == "H" || "$arg2" == "H"  ]]; then
     # Define the pdb file name based on the arguments

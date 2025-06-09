@@ -1,23 +1,8 @@
 # Load the network stats data
-#load("~/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/Edgelist/Tripeptide/tripeptide_network_stats.rda")
-load("/Users/song/Documents/Research/MRSEC/ML-MD Peptide /tripeptide_network_stats_single_node.rda")
+load("~/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/Edgelist/Tripeptide/tripeptide_network_stats.rda")
+
 # Combine monomer and dimer data
-#combined_df <- rbind(final_results[[1]], final_results[[2]])
-combined_df_mon<-c()
-state<-"monomer"
-for (i in 1:(length(final_results)/2)) {
-  combined_df_mon<-rbind(combined_df_mon,final_results[[i]])
-}
-combined_df_mon<-cbind(combined_df_mon,state)
-
-combined_df_dim<-c()
-state<-"dimer"
-for (i in (length(final_results)/2+1):length(final_results)) {
-  combined_df_dim<-rbind(combined_df_dim,final_results[[i]])
-}
-combined_df_dim<-cbind(combined_df_dim,state)
-combined_df <- rbind(combined_df_dim, combined_df_mon)
-
+combined_df <- rbind(final_results[[1]], final_results[[2]])
 
 # Define residue groups
 acidic <- c("D", "E")
@@ -32,7 +17,7 @@ ordered_residues <- c(acidic, basic, polar, aliphatic, aromatic)
 # Initialize matrix for mutation effects
 residues <- c("A", "F", "G", "H", "I", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "V", "W", "Y", "E", "D")
 mutation_effects <- matrix(NA, nrow = length(residues), ncol = length(residues),
-                           dimnames = list(from = residues, to = residues))
+                          dimnames = list(from = residues, to = residues))
 
 # Pre-process the data: create a lookup table for edge differences
 # First, filter for only edge statistics
@@ -43,9 +28,9 @@ edge_means <- aggregate(value ~ seqname + state, data = edge_data, FUN = mean)
 
 # Reshape to wide format for easy difference calculation
 edge_wide <- reshape(edge_means, 
-                     idvar = "seqname", 
-                     timevar = "state", 
-                     direction = "wide")
+                    idvar = "seqname", 
+                    timevar = "state", 
+                    direction = "wide")
 edge_wide$edge_diff <- edge_wide$value.dimer - edge_wide$value.monomer
 
 # Create a lookup table for quick access
@@ -128,29 +113,16 @@ heatmap_df$is_diagonal <- heatmap_df$From == heatmap_df$To
 heatmap_df$is_symmetric <- heatmap_df$From_idx > heatmap_df$To_idx
 
 # Plotting
-mut_edge_plt <- ggplot(heatmap_df, aes(x = From, y = To, fill = DeltaDeltaEdges/300)) +
+mut_edge_plt <- ggplot(heatmap_df, aes(x = From, y = To, fill = DeltaDeltaEdges)) +
   geom_tile() +
   # Add diagonal line
   geom_abline(intercept = 20, slope = -1, color = "black", linetype = "dashed") +
-  scale_fill_gradientn(
-    colors = c("blue", "white", "yellow", "red"),
-                        values = scales::rescale(c(-2, 0, 1, 2), from = c(-2, 2)),
-                        limits = c(-2, 2),
-                        na.value = "white",
-                       guide = guide_colorbar(
-                         title.position = "top",
-                         title.hjust = 0.5,
-                         barwidth = unit(5, "cm"),
-                         barheight = unit(0.5, "cm"),
-                         label.theme = element_text(size = 10, margin = margin(t = 0, b = 0))
-                       )
-                       ) +
+  scale_fill_gradient2(low = "blue", mid = "yellow", high = "red", midpoint = 0, na.value = "white") +
   scale_x_discrete(limits = ordered_residues) +
   scale_y_discrete(limits = rev(ordered_residues)) +
-  plttheme +
-  labs(title = "Average Change in ΔContacts by Mutation", fill = "ΔΔContacts per monomer") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        legend.position  ="top" ) +
+  theme_minimal() +
+  labs(title = "Average Change in ΔEdges by Mutation", fill = "ΔΔEdges") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   # Add text annotations for symmetric pairs
   geom_text(data = subset(heatmap_df, is_symmetric), 
             aes(label = "*"), 

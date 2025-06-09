@@ -2,7 +2,7 @@
 
 # Directory containing the .xvg files
 dir="out/"
-for Cindex in 1 2 3 4; do
+for Cindex in  3; do
     # Output file name based on Cindex
     output_file="SASA_result_with_common_mon_ini_tetra_C${Cindex}.txt"
     >"$output_file" # Clear the output file

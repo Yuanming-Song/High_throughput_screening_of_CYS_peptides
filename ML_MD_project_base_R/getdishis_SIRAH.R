@@ -1,3 +1,4 @@
+#dimers are treated as 2 node
 getdishis_SIRAH<-function(dimerized,dishis=TRUE) {
   
   # Initialize variables
@@ -22,12 +23,6 @@ getdishis_SIRAH<-function(dimerized,dishis=TRUE) {
   
   # Determine peptide length
   peptide_length <- length(seen_resno)
-  if (dimerized) {
-    peptide_length<-peptide_length/2
-    numatom<-numatom/2
-  }
-  
-  
   
   # Example construction of AtomTypeLib
   first_monomer_indices <- 1:numatom
@@ -85,7 +80,8 @@ getdishis_SIRAH<-function(dimerized,dishis=TRUE) {
   
   
   # Determine step size
-  step_size <- if (dimerized) numatom * 2 else numatom
+  step_size <- numatom
+  #for more detailed analysis, consider  if (dimerized && !single_node) numatom * 2 else numatom
   
   # Iterate through `resno` for molecules
   for (molecule_index in 1:2000) {
@@ -110,11 +106,11 @@ getdishis_SIRAH<-function(dimerized,dishis=TRUE) {
   if (dishis) {
     #get cluster size histogram for all frame, and add them up, return the result directly
     foreach(frame=framei:dim(simtraj$coord)[3],.combine="+") %dopar% (
-      getdishis_base(frame,AtomIndexLib, cutoff_matrix, AtomIndexList, AtomTypeLib)
+      getdishis_base(frame,AtomIndexLib, cutoff_matrix, AtomIndexList, AtomTypeLib,dimerized)
     )
   } else {
     foreach(frame=framei:dim(simtraj$coord)[3],.combine="rbind") %dopar% (
-      getcsize_base(frame,AtomIndexLib, cutoff_matrix, AtomIndexList, AtomTypeLib)
+      getcsize_base(frame,AtomIndexLib, cutoff_matrix, AtomIndexList, AtomTypeLib,dimerized)
     )
   }
   

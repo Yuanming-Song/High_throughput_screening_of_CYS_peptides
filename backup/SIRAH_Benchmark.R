@@ -21,7 +21,7 @@ conc_colors <- setNames(
     "#FC8D62", "#8DA0CB", "#E78AC3", "#A6D854", "#FFD92F"),
   factor(concentrations)
 )
-unique_seqs<-unique(sum_size_t$seq)
+
 # Define colors for each box size using a more diverse palette
 box_colors <- setNames(
   c("#E41A1C", "#377EB8", "#4DAF4A", "#984EA3", "#FF7F00", 
@@ -66,8 +66,7 @@ for (s in unique_seqs) {
     plttheme +
     theme(axis.title.x = element_blank(),
           axis.title.y = element_blank(),
-          legend.position = "none") +
-        scale_y_continuous(limits = c(0,300))# Remove legend from individual plots
+          legend.position = "none")   # Remove legend from individual plots
   
   
   # Add log scale for y-axis in p2

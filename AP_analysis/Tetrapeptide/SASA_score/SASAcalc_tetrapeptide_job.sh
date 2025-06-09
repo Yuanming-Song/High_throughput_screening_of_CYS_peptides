@@ -1,10 +1,11 @@
 #!/bin/bash
 # Define arrays for positions and first non-C residues
-positions=(1 2 3 4)
+positions=(3)
 inpres=("A" "F" "G" "H" "I" "K" "L" "M" "N" "P" "Q" "R" "S" "T" "V" "W" "Y" "E" "D")
 
 # Set paths
 script="/dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/AP_analysis/Script/SASAcalc_tetrapeptide.sh"
+script="/dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/AP_analysis/Script/SASAcalc_tetrapeptide_mon.sh"
 log_dir="log/"
 err_dir="err/"
 
@@ -15,8 +16,8 @@ mkdir -p "$log_dir" "$err_dir"
 for pos in "${positions[@]}"; do
     for inpres_val in "${inpres[@]}"; do
         jobname="SASA_C${pos}_${inpres_val}_tetra"
-        out_log="${log_dir}/${jobname}.out"
-        err_log="${err_dir}/${jobname}.err"
+        out_log="${log_dir}/${jobname}_mon.out"
+        err_log="${err_dir}/${jobname}_mon.err"
         
         # Submit the job
         sbatch --job-name="${jobname}" \

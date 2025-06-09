@@ -1,11 +1,22 @@
 #!/bin/bash
-# box size
+# Base directory for all tools and resources
+BaseDir="/dfs9/tw/yuanmis1"
+# box size and simulation parameters
+MartiniDir="${BaseDir}/mrsec/FFssFF/CG_single/ubiquitin/martini/"
+MartiniDir_mdp_file="${BaseDir}/mrsec/ML-MD-Peptide/Tripeptide/MARTINI_Setup_script/dynamic.mdp"
+Martini2psf="${BaseDir}/mrsec/ML-MD-Peptide/Tripeptide/MARTINI_Setup_script/getMARTINIpsf.sh"
+makeAAtemplate="${BaseDir}/mrsec/ML-MD-Peptide/Tetrapeptide/AA_template_script/mutate_template_mon.tcl"
+vmd_exc="${BaseDir}/vmd/bin/vmd"
+martinize_exc="${BaseDir}/tools/martinize.py/martinize.py"
 box_size_nm=14.3
 ncopy=300
 #peptide secondary structure, C or E, conventionally used E for self assembly, no diffierence found for short peptide
 secstructure="EEEE" 
 # Lines to insert at the beginning of the .top file
-lines_to_insert='#include "/dfs9/tw/yuanmis1/mrsec/FFssFF/CG_single/martini/martini_v2.2.itp"\n#include "/dfs9/tw/yuanmis1/mrsec/ff/martini/martini_v2.0_ions.itp"'
+lines_to_insert='#include "'${BaseDir}'/mrsec/FFssFF/CG_single/martini/martini_v2.2.itp"\n#include "'${BaseDir}'/mrsec/ff/martini/martini_v2.0_ions.itp"'
+
+# Print node information
+echo "Running on node: $(hostname)"
 
 # Check if exactly three arguments are provided
 if [ "$#" -ne 4 ]; then
@@ -24,13 +35,12 @@ dir_name="${arg1}_${arg2}_${arg3}_${arg4}"
 
 # Check if the directory exists
 if [ -d "$dir_name" ]; then
-    echo "Directory '$dir_name' already exists, submit manually."
-    #exit 1  # Stop the script with a non-zero exit status
-else
-    # Create the directory if it does not exist
-    mkdir "$dir_name"
-    echo "Directory '$dir_name' created successfully."
+        echo "Directory '$dir_name' already exists, submit manually."
+exit 0  # Quietly exit if directory exists
 fi
+
+# Create the directory
+mkdir "$dir_name"
 cd ${arg1}_${arg2}_${arg3}_${arg4}
 
 # Check each argument and update IndexC with the 1-based index
@@ -45,7 +55,7 @@ elif [ "$arg4" == "C" ]; then
 fi
 
 # Use a linear peptide template, mutate residue based on input
-/dfs9/tw/yuanmis1/vmd/bin/vmd -dispdev none -e /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/Tetrapeptide/AA_template_script/mutate_template_mon.tcl -args ${arg1} ${arg2} ${arg3} ${arg4} AA_template_dimer_C$IndexC >mutate_${arg1}_${arg2}_${arg3}_${arg4}.log 2>&1
+${vmd_exc} -dispdev none -e ${makeAAtemplate} -args ${arg1} ${arg2} ${arg3} ${arg4} AA_template_dimer_C$IndexC >mutate_${arg1}_${arg2}_${arg3}_${arg4}.log 2>&1
 # Check if any of the arguments is H
 if [[ "$arg1" == "H" || "$arg2" == "H" || "$arg3" == "H" || "$arg4" == "H" ]]; then
     # Define the pdb file name based on the arguments
@@ -62,9 +72,8 @@ if [[ "$arg1" == "H" || "$arg2" == "H" || "$arg3" == "H" || "$arg4" == "H" ]]; t
 fi
 # Martinize
 module load python/2.7.17
-python2.7 /dfs9/tw/yuanmis1/tools/martinize.py/martinize.py -f ${arg1}_${arg2}_${arg3}_${arg4}.pdb -o ${arg1}_${arg2}_${arg3}_${arg4}_CG.top -x ${arg1}_${arg2}_${arg3}_${arg4}_CG.pdb -ff martini22 -v -cys auto -name ${arg1}_${arg2}_${arg3}_${arg4} -ss ${secstructure} >${arg1}_${arg2}_${arg3}_${arg4}_CG_martinize.log 2>&1
+python2.7 ${martinize_exc} -f ${arg1}_${arg2}_${arg3}_${arg4}.pdb -o ${arg1}_${arg2}_${arg3}_${arg4}_CG.top -x ${arg1}_${arg2}_${arg3}_${arg4}_CG.pdb -ff martini22 -v -cys auto -name ${arg1}_${arg2}_${arg3}_${arg4} -ss ${secstructure} >${arg1}_${arg2}_${arg3}_${arg4}_CG_martinize.log 2>&1
 module load gromacs/2022.1/gcc.8.4.0-cuda.11.7.1
-MartiniDir="/dfs9/tw/yuanmis1/mrsec/FFssFF/CG_single/ubiquitin/martini/"
 #Load gromacs
 #Add something to topology file?
 # Modify setup script
@@ -115,10 +124,17 @@ echo "grompp equalibration is done, check gromppEqu.log file"
 gmx mdrun -deffnm equilibration -v >equilibration.log 2>&1
 echo "Equalibration is done, check equilibration.log file"
 #Generate first dynamics tpr file
-gmx grompp -p ${arg1}_${arg2}_${arg3}_${arg4}_CG.top -c equilibration.gro -f /dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/Tripeptide/MARTINI_Setup_script/dynamic.mdp -o ${arg1}_${arg2}_${arg3}_${arg4}_CG_md.tpr -maxwarn 1 >gromppMD.log 2>&1
+gmx grompp -p ${arg1}_${arg2}_${arg3}_${arg4}_CG.top -c equilibration.gro -f ${MartiniDir_mdp_file} -o ${arg1}_${arg2}_${arg3}_${arg4}_CG_md.tpr -maxwarn 1 >gromppMD.log 2>&1
 echo "grompp MD production is done, check gromppMD.log file"
 #generate psf file for easy viewing in VMD
-/dfs9/tw/yuanmis1/mrsec/ML-MD-Peptide/Tripeptide/MARTINI_Setup_script/getMARTINIpsf.sh -b ${arg1}_${arg2}_${arg3}_${arg4}_CG
+${Martini2psf} -b ${arg1}_${arg2}_${arg3}_${arg4}_CG
 echo "MD production run is going, check ${arg1}_${arg2}_${arg3}_${arg4}_CG_md.log"
 #Run the dynamic
 gmx mdrun -nt $SLURM_CPUS_PER_TASK -deffnm ${arg1}_${arg2}_${arg3}_${arg4}_CG_md >${arg1}_${arg2}_${arg3}_${arg4}_CG_md.log 2>&1
+
+# Check if md.gro file exists
+if ! ls *md*.gro >/dev/null 2>&1; then
+    echo "ERROR: MD simulation failed - no *md*.gro file found"
+    echo "Node: $(hostname)"
+    exit 1
+fi

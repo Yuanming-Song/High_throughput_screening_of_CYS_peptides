@@ -1,4 +1,4 @@
-getdishis_base<-function(frame,AtomIndexLib, cutoff_matrix, AtomIndexList, AtomTypeLib) {
+getdishis_base<-function(frame,AtomIndexLib, cutoff_matrix, AtomIndexList, AtomTypeLib,dimerized) {
   #generate edge
   edges<-find_contacts_for_residue(AtomIndexLib, simtraj$coord[,,frame], cutoff_matrix, AtomIndexList, AtomTypeLib,c(max(simtraj$coord[,1,frame]), max(simtraj$coord[,2,frame]), max(simtraj$coord[,2,frame])))
   #format it properly

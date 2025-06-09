@@ -1,6 +1,6 @@
 seqlist<-c(#"L_V_C",
-  "C_P_V","C_G_I","T_A_C","C_A_S"
-  
+  #"C_P_V","C_G_I","T_A_C","C_A_S"
+  "Q_R_C"
 )
 # File paths and corresponding data names
 files <- list(
@@ -312,8 +312,6 @@ for (seq in seqlist) {
 }
 
 # New section for combined plots (after line 313)
-# Set save option
-save_plots <- TRUE
 plot_dir <- "~/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/AP_analysis/Tripeptide/plots/"
 
 # Remove legends and adjust axis labels for all plots
