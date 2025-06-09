@@ -1,0 +1,97 @@
+#!/bin/bash
+
+#SBATCH --job-name=R_analysis
+#SBATCH --account=dtobias_lab
+#SBATCH --partition=standard
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --cpus-per-task=40
+#SBATCH --output=R_analysis.out
+#SBATCH --error=R_analysis.err
+#SBATCH --mail-type=all
+#SBATCH --mail-user=yuanmis1@uci.edu
+#SBATCH --time=25:00:00
+#SBATCH --mem=100G
+module purge
+module load R
+#NAMD=/data/homezvol0/jfreites/NAMD_3.0alpha6_Linux-x86_64-multicore-CUDA/namd3
+#NAMD=/data/homezvol0/mvondoma/Software/NAMD_3.0alpha6-patched_Linux-x86_64-multicore-CUDA/namd3
+
+#$NAMD +p $SLURM_CPUS_PER_TASK +devices $CUDA_VISIBLE_DEVICES +isomalloc_sync +setcpuaffinity npt08.inp
+
+#NAMD=/data/homezvol0/mvondoma/Software/NAMD_2.14_Linux-x86_64-multicore/namd2
+
+#$NAMD +p $SLURM_CPUS_PER_TASK npt08.inp
+
+#VMD=/data/homezvol0/mvondoma/local/bin/vmd
+VMD=/pub/jfreites/vmd/bin/vmd
+
+#$VMD -dispdev text -e Tclscript/getEdgesSmallv3b.tcl
+#Rscript  Rscript/getStck.edgel.v3.R
+#tclsh Tclscript/getInteract3.tcl
+#$VMD -dispdev text -e Tclscript/getTraj.tcl
+#$VMD -dispdev text -e Tclscript/getDihedIndex.tcl
+#$VMD -dispdev text -e Tclscript/rewritepsf.tcl 
+#$VMD -dispdev text -e Tclscript/getorient.tcl 
+#$VMD -dispdev text -e Tclscript/getNodesSmallSirah.tcl
+#$VMD -dispdev text -e Tclscript/getNodesSmallv3.tcl
+#$VMD -dispdev text -e Tclscript/getNodesSmallv3.data.tcl 
+
+#$VMD -dispdev text -e Tclscript/getcylsize.tcl 
+#$VMD -dispdev text -e Tclscript/getrdf.tcl
+#$VMD -dispdev text -e Tclscript/getrdftemp.tcl
+#$VMD -dispdev text -e Tclscript/getcylsizen1.tcl 
+#$VMD -dispdev text -e Tclscript/getcoorn.tcl
+#$VMD -dispdev text -e Tclscript/summary.tcl
+#$VMD -dispdev text -e Tclscript/getcylrho.tc
+#$VMD -dispdev text -e Tclscript/getEdgesSmallv3b.tcl
+#$VMD -dispdev text -e Tclscript/getEdgesSmallv3bn1.tcl
+#$VMD -dispdev text -e Tclscript/getcylrhon1.tcl
+#$VMD -dispdev text -e Tclscript/getorient.tcl
+#dd$VMD -dispdev text -e Tclscript/getorientn1.tcl
+#$VMD -dispdev text -e Tclscript/gettip_resid.tcl
+#tclsh Tclscript/getInteract3.tcl  
+#Rscript  Rscript/getStck.edgel.R
+#Rscript  Rscript/getStck.edgel.v3.R > Stck.out
+#Rscript  Rscript/getStckn1.edgel.R
+#Rscript  Rscript/getMoietyDegree.R
+#Rscript  Rscript/getMoietyDegreen1.R
+#Rscript  Rscript/getComponentResid.R
+##Rscript  Rscript/shapeWorkall_multiple_ConvexHull.R
+#Rscript  Rscript/gethbonddist3.R
+#Rscript  Rscript/getdensity.R
+#Rscript  Rscript/getdensity_rda.R
+#Rscript  Rscript/getdensity_rda_v2.R
+#Rscript  Rscript/getorient.R
+#Rscript  Rscript/gethbond.R
+#Rscript  Rscript/getcoordist_tip.R
+#Rscript Rscript/getdihed_notdis.R
+#Rscript Rscript/gettip.R
+#Rscript Rscript/getrdf_cyl.R
+#Rscript Rscript/getEdges_COM.R
+#Rscript Rscript/getComponentResid_COM.R
+#Rscript Rscript/gethbonddist3.R
+#R -f  Rscript/gethbonddist3.R
+#R -f Rscript/getEdges.R
+#R -f Rscript/gethbond_COM.R
+#R -f Rscript/gethbondhis_COM.R
+
+#R -f Rscript/getOrient.R > getOrient.pure.log 2> getOrient.pure.err
+#R -f Rscript/getDensity.R
+#R -f Rscript/getHbond_spatial.R
+#sysname="mix."
+#R -f Rscript/getHbond_spatial_hist.R > getHbond_spatial_hist.${sysname}log 2> getHbond_spatial_hist.${sysname}err
+#R -f Rscript/getPHEdisR.R > getPHEdisR.${sysname}log 2> getPHEdisR.${sysname}err
+#R -f Rscript/getBBorient.R > getBBorient.${sysname}log 2> getBBorient.${sysname}err
+# R -f Rscript/getcoorSDdist.R > getcoorSDdist.${sysname}log 2> getcoorSDdist.${sysname}err
+#R -f Rscript/getBBorientRadial.R > getBBorientRadial.${sysname}log 2> getBBorientRadial.${sysname}err
+#R -f Rscript/getPiR.R > getPiR.mix.log
+#R -f Rscript/getcoordist_moiety.R > getcoordist_moiety.${sysname}log 2> getcoordist_moiety.${sysname}err
+scriptkey="getGyrT_dipeptide"
+scriptkey="getcsizedist_dipeptide_SIRAH_validate_boxsize"
+scriptkey="getcsize_t_tripeptide_SIRAH_validate_boxsize"
+
+sysname=""
+R -f ${scriptkey}.R > log/${scriptkey}.${sysname}log 2> err/${scriptkey}.${sysname}err
+
+#R -f Rscript/getCoor.R > log/getCoor.mix.log 2> err/getCoor.mix.err

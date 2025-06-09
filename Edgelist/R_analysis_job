@@ -1,0 +1,44 @@
+#!/bin/bash
+
+#SBATCH --job-name=R_analysis
+#SBATCH --account=dtobias_lab
+#SBATCH --partition=standard
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --cpus-per-task=40
+#SBATCH --output=R_analysis.out
+#SBATCH --error=R_analysis.err
+#SBATCH --mail-type=all
+#SBATCH --mail-user=yuanmis1@uci.edu
+#SBATCH --time=60:00:00
+module purge
+module load R
+#NAMD=/data/homezvol0/jfreites/NAMD_3.0alpha6_Linux-x86_64-multicore-CUDA/namd3
+#NAMD=/data/homezvol0/mvondoma/Software/NAMD_3.0alpha6-patched_Linux-x86_64-multicore-CUDA/namd3
+
+#$NAMD +p $SLURM_CPUS_PER_TASK +devices $CUDA_VISIBLE_DEVICES +isomalloc_sync +setcpuaffinity npt08.inp
+
+#NAMD=/data/homezvol0/mvondoma/Software/NAMD_2.14_Linux-x86_64-multicore/namd2
+
+#$NAMD +p $SLURM_CPUS_PER_TASK npt08.inp
+
+#VMD=/data/homezvol0/mvondoma/local/bin/vmd
+VMD=/pub/jfreites/vmd/bin/vmd
+
+
+#scriptkey="getGyrT_dipeptide"
+#scriptkey="combine_edge_Tetrapeptide"
+#scriptkey="edgelist_to_adjmat_Tetrapeptide"
+#scriptkey="getEdge_tripeptide_martini_v2"
+#scriptkey="getEdge_tripeptide_martini"
+#scriptkey="combine_edge_Tripeptide"
+scriptkey="network_stats_analysis"
+#scriptkey="getEdge_dipeptide_martini"
+#scriptkey="convert_single_to_multi_node"
+#scriptkey="combine_edge_dipeptide"
+#scriptkey="combine_edge_dipeptide"
+#scriptkey="combine_edge_Tripeptide"
+sysname=""
+
+R -f Rscript/Tripeptide/${scriptkey}.R > log/${scriptkey}.${sysname}log 2> err/${scriptkey}.${sysname}err
+

@@ -1,0 +1,1800 @@
+---
+title: "Aggregation Propensity Score of Cystine-Containing Tripeptides from Coarse-Grained Simulation"
+output:
+  slidy_presentation: default
+  ioslides_presentation: default
+date: "2024-09-03"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+APplotDir<-"~/Documents/Research/manuscript/ML_MD_pep/ML_MD\ Peptide/MARTINI_plt/"#/Users/song/Documents/Research/MRSEC/ML-MD Peptide /AP_MD_plt/"
+# Load necessary libraries
+
+
+library(plotly)
+library(readxl)
+
+library(scales)  # For squish function
+library(grid)
+
+library(cowplot)
+# Required packages
+required_packages <- c("ggplot2", "dplyr", "tidyr", "gridExtra")
+
+# Function to safely load packages
+load_packages <- function(packages) {
+    for (package in packages) {
+        if (!requireNamespace(package, quietly = TRUE)) {
+            install.packages(package)
+            library(package, character.only = TRUE)
+        } else {
+            library(package, character.only = TRUE)
+        }
+    }
+}
+
+# Load required packages
+load_packages(required_packages)
+plttheme<-{theme(panel.background = element_rect(fill='transparent'),
+                 text=element_text(#face = "bold",
+                   size=12),
+                 legend.direction = "horizontal",
+                 legend.position = "bottom",
+                 #legend.title = element_blank(),
+                 legend.key = element_rect(fill = "transparent"),
+                 #panel.grid.major=element_line(colour = "grey",size = 0.1),
+                 axis.line = element_line(colour = "black",size = 0.3),
+                 legend.text = element_text(size = 10),
+                 legend.title = element_text(size = 12),
+                 plot.title = element_text(size = 12),
+                 #aspect.ratio = 0.5,
+                 legend.background = element_rect(fill = "transparent"
+                 )
+)}
+
+```
+
+```{r setup2, include=FALSE}
+
+
+
+TripAPmon <- read_excel("/Users/song/Documents/Research/MRSEC/ML-MD Peptide /Literature/Tripeptide AP score/AP_list_tripeptides.xlsx")  
+# Extract the first dataset (assuming columns 1 to 4 correspond to the first set)
+TripAPmon1 <- TripAPmon[, 1:4]
+colnames(TripAPmon1) <- c("pep", "AP", "logP", "AP_H")
+
+# Extract the second dataset (assuming columns 6 to 9 correspond to the second set, skipping the empty column)
+TripAPmon2 <- TripAPmon[, 6:9]
+colnames(TripAPmon2) <- c("pep", "AP", "logP", "AP_H")
+
+# Extract the third dataset (assuming columns 11 to 14 correspond to the third set, skipping the second empty column)
+TripAPmon3 <- TripAPmon[, 11:14]
+colnames(TripAPmon3) <- c("pep", "AP", "logP", "AP_H")
+
+# Split the 'pep' column into three separate columns, each containing one letter
+combined_TripAPmon <- separate(TripAPmon1, col = pep, into = c("Amino1", "Amino2", "Amino3"), sep = 1:2, remove = FALSE)
+```
+
+```{r setup3, include=FALSE}
+positions<-seq(1,3,1)
+# Initialize an empty data frame to store the top 10 differences with all columns from merged_data
+top_10_diff <- data.frame()
+# Define amino acid classification
+hydrophobic <- c("A", "V", "I", "L", "M",  "P")
+aromatic<-c("F","W","Y","H")
+polar_uncharged <- c("S", "T", "N", "Q", "G")
+positive_charged <- c("K", "R")
+negative_charged <- c("D", "E")
+
+# Function to classify sequences based on Amino1, Amino2, Amino3
+classify_sequence <- function(a1, a2, a3) {
+  amino_acids <- c(as.character(a1), as.character(a2), as.character(a3))
+  amino_acids <- amino_acids[amino_acids != "C"]  # Ignore C in classification
+  
+  hydrophobic_count <- sum(amino_acids %in% hydrophobic)
+  polar_count <- sum(amino_acids %in% polar_uncharged)
+  charged_count <- sum(amino_acids %in% c(positive_charged, negative_charged))  # Combine both charged types
+  aromatic_count <- sum(amino_acids %in% aromatic)
+  # Classify based on counts
+  if (hydrophobic_count == 2) {
+    return("2 Hydrophobic Side Chains")
+  } else if (polar_count == 2) {
+    return("2 Polar Uncharged Side Chains")
+  } else if (charged_count == 2) {
+    return("2 Charged Side Chains")
+  } else if (aromatic_count==2) {
+    return("2 Aromatic")
+  } else {
+    returntext<-""
+    
+    if (hydrophobic_count == 1 ) {
+      returntext<-"Hydrophobic + "
+      if (aromatic_count == 1 ) {
+        returntext<-paste0(returntext,"Aromatic")
+      } else if (polar_count==1 ) {
+        returntext<-paste0(returntext,"Polar")
+      } else if (charged_count==1 ) {
+        returntext<-paste0(returntext,"Charged")
+      } 
+      returntext
+    } else if (aromatic_count == 1 ) {
+      returntext<-"Aromatic + "
+      if (polar_count==1 ) {
+        returntext<-paste0(returntext,"Polar")
+      } else if (charged_count==1 ) {
+        returntext<-paste0(returntext,"Charged")
+      } 
+      returntext
+    } else if (polar_count == 1 ) {
+      
+      returntext<-"Polar + "
+      if (charged_count==1 ) {
+        returntext<-paste0(returntext,"Charged")
+      } 
+      returntext
+    }
+    
+  }
+}
+
+classify_sequence_dipeptide <- function(a1,a2) {
+  amino_acids <- c(as.character(a1),as.character(a2))
+  amino_acids <- amino_acids[amino_acids != "C"]  # Ignore C in classification
+  
+  if (amino_acids %in% hydrophobic) {
+    return("Hydrophobic")
+  } else if (amino_acids %in% polar_uncharged) {
+    return("Polar Uncharged")
+  } else if (amino_acids %in% positive_charged) {
+    return("Positively Charged")
+  } else if (amino_acids %in% negative_charged) {
+    return("Negatively Charged")
+  } else if (amino_acids %in% aromatic) {
+    return("Aromatic")
+  } else {
+    return("Other")
+  }
+  
+}
+
+```
+
+```{r setup4, include=FALSE}
+
+# Loop through each position of C (1, 2, 3)
+for (pos in positions) {
+  # Construct the file path for each position
+  file_path <- paste0("/Users/song/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/AP_analysis/Tripeptide/SASA_score/SASA_result_C", pos, ".dat")
+  
+  # Read the data from the file
+  data <- read.table(file_path, header = FALSE, stringsAsFactors = FALSE)
+  
+  # Rename columns for clarity
+  colnames(data) <- c("Amino1", "Amino2", "Amino3", "AP")
+  # Reorder the relevant columns based on the position of C
+  
+  if (pos == 1) {
+    
+    # Calculate the order for Amino2 based on diagonal values when C is at position 1
+    amino_order <- sapply(unique(data$Amino2), function(amino) {
+      # Extract values where Amino2 is equal to the current amino acid and Amino1 is C
+      value <- data[data$Amino2 == amino & data$Amino3 == amino, "AP"]
+      
+      # Handle missing or absent values
+      if (length(value) == 0 || all(is.na(value))) {
+        return(Inf)  # Use Inf to place missing values last in the order
+      } else {
+        return(mean(value, na.rm = TRUE))  # Calculate the mean of the values
+      }
+    })
+    
+    # Order the amino acids based on the calculated values in ascending order
+    ordered_levels <- names(sort(amino_order))
+    
+    # Reorder Amino2 and Amino3 when C is at position 1
+    data$Amino2 <- factor(data$Amino2, levels = ordered_levels)
+    data$Amino3 <- factor(data$Amino3, levels = ordered_levels)
+    file_path_mon <- paste0("/Users/song/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/AP_analysis/Tripeptide/SASA_score/SASA_result_C", pos, "_mon.dat")
+    if (file.exists(file_path_mon)) {
+      filtered_data_my <- read.table(file_path_mon, header = FALSE, stringsAsFactors = FALSE)
+      # Rename columns for clarity
+      colnames(filtered_data_my) <- c("Amino1", "Amino2", "Amino3", "AP")
+      
+    } 
+    
+    # Keep rows where Amino1 is C and Amino2, Amino3 are not C
+    filtered_data <- combined_TripAPmon %>%
+      filter(Amino1 == "C" & Amino2 != "C" & Amino3 != "C")
+    
+    # Reorder Amino2 and Amino3 when C is at position 1
+    filtered_data$Amino2 <- factor(filtered_data$Amino2, levels = ordered_levels)
+    filtered_data$Amino3 <- factor(filtered_data$Amino3, levels = ordered_levels)
+    
+    filtered_data_my$Amino2 <- factor(filtered_data_my$Amino2, levels = ordered_levels)
+    filtered_data_my$Amino3 <- factor(filtered_data_my$Amino3, levels = ordered_levels)
+    
+    
+    
+    x_axis <- "Amino2"
+    y_axis <- "Amino3"
+  } else if (pos == 2) {
+    # Reorder Amino1 and Amino3 when C is at position 2
+    data$Amino1 <- factor(data$Amino1, levels = ordered_levels)
+    data$Amino3 <- factor(data$Amino3, levels = ordered_levels)
+    x_axis <- "Amino1"
+    y_axis <- "Amino3"
+    file_path_mon <- paste0("/Users/song/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/AP_analysis/Tripeptide/SASA_score/SASA_result_C", pos, "_mon.dat")
+    if (file.exists(file_path_mon)) {
+      filtered_data_my <- read.table(file_path_mon, header = FALSE, stringsAsFactors = FALSE)
+      # Rename columns for clarity
+      colnames(filtered_data_my) <- c("Amino1", "Amino2", "Amino3", "AP")
+      
+    } 
+    # Keep rows where Amino2 is C and Amino1, Amino3 are not C
+    filtered_data <- combined_TripAPmon %>%
+      filter(Amino2 == "C" & Amino1 != "C" & Amino3 != "C")
+    
+    # Reorder Amino1 and Amino3 when C is at position 2
+    filtered_data$Amino1 <- factor(filtered_data$Amino1, levels = ordered_levels)
+    filtered_data$Amino3 <- factor(filtered_data$Amino3, levels = ordered_levels)
+    filtered_data_my$Amino1 <- factor(filtered_data_my$Amino1, levels = ordered_levels)
+    filtered_data_my$Amino3 <- factor(filtered_data_my$Amino3, levels = ordered_levels)
+    
+    
+    
+  } else if (pos == 3) {
+    # Reorder Amino1 and Amino2 when C is at position 3
+    data$Amino1 <- factor(data$Amino1, levels = ordered_levels)
+    data$Amino2 <- factor(data$Amino2, levels = ordered_levels)
+    x_axis <- "Amino1"
+    y_axis <- "Amino2"
+    file_path_mon <- paste0("/Users/song/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/AP_analysis/Tripeptide/SASA_score/SASA_result_C", pos, "_mon_att2.dat")
+    if (file.exists(file_path_mon)) {
+      filtered_data_my <- read.table(file_path_mon, header = FALSE, stringsAsFactors = FALSE)
+      # Rename columns for clarity
+      colnames(filtered_data_my) <- c("Amino1", "Amino2", "Amino3", "AP")
+      
+    } 
+    # Keep rows where Amino3 is C and Amino1, Amino2 are not C
+    filtered_data <- combined_TripAPmon %>%
+      filter(Amino3 == "C" & Amino1 != "C" & Amino2 != "C")
+    # Reorder Amino1 and Amino2 when C is at position 3
+    filtered_data$Amino1 <- factor(filtered_data$Amino1, levels = ordered_levels)
+    filtered_data$Amino2 <- factor(filtered_data$Amino2, levels = ordered_levels)
+    filtered_data_my$Amino1 <- factor(filtered_data_my$Amino1, levels = ordered_levels)
+    filtered_data_my$Amino2 <- factor(filtered_data_my$Amino2, levels = ordered_levels)
+    
+  }
+  
+  
+  
+  
+  filtered_data<-filtered_data[,c("Amino1", "Amino2", "Amino3","AP")]
+  # Merge data and filtered_data based on matching Amino1, Amino2, and Amino3
+  merged_data <- merge(data, filtered_data, by = c("Amino1", "Amino2", "Amino3"), suffixes = c("_dim", "_mon"))
+  merged_data$Seq<-paste0(merged_data$Amino1,merged_data$Amino2,merged_data$Amino3)
+  # Calculate the difference only for matching rows
+  merged_data$AP_diff <- merged_data$AP_dim - merged_data$AP_mon
+  # Add a classification column to merged_data
+  merged_data$Category <- mapply(classify_sequence, merged_data$Amino1, merged_data$Amino2, merged_data$Amino3)
+  
+  # Plot with categories
+  AP_scatter_plt <- {
+    ggplot(merged_data) +
+      geom_point(aes(x = AP_mon, y = AP_dim, col = Category, text = Seq)) +
+      geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") +  # Add y = x line
+      labs(title = paste0("AP Scores for Tripeptide \nC at Position",pos), 
+           x = "AP_unstapled_2015", y = "AP_stapled") +
+      plttheme +
+      scale_x_continuous(limits = c(1, 2.5)) +
+      scale_y_continuous(limits = c(1, 2.5))
+  }
+  
+  assign(paste0("AP_scatter_C_position_", pos), ggplotly(AP_scatter_plt))
+  
+  filtered_data_my<-filtered_data_my[,c("Amino1", "Amino2", "Amino3","AP")]
+  # Merge data and filtered_data_my based on matching Amino1, Amino2, and Amino3
+  merged_data_my <- merge(data, filtered_data_my, by = c("Amino1", "Amino2", "Amino3"), suffixes = c("_dim", "_mon"))
+  merged_data_my$Seq<-paste0(merged_data_my$Amino1,merged_data_my$Amino2,merged_data_my$Amino3)
+  # Calculate the difference only for matching rows
+  merged_data_my$AP_diff <- merged_data_my$AP_dim - merged_data_my$AP_mon
+  # Add a classification column to merged_data_my
+  merged_data_my$Category <- mapply(classify_sequence, merged_data_my$Amino1, merged_data_my$Amino2, merged_data_my$Amino3)
+  
+  # Plot with categories
+  AP_scatter_my_plt <- {
+    ggplot(merged_data_my) +
+      geom_point(aes(x = AP_mon, y = AP_dim, col = Category, text = Seq)) +
+      geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") +  # Add y = x line
+      labs(title = paste0("AP Scores for Tripeptide \nC at Position",pos), 
+           x = "AP_unstapled_my_run", y = "AP_stapled") +
+      plttheme +
+      scale_x_continuous(limits = c(1, 2.5)) +
+      scale_y_continuous(limits = c(1, 2.5))
+  }
+  
+  assign(paste0("AP_scatter_myrun_C_position_", pos), ggplotly(AP_scatter_my_plt))
+  # Read the txt file into a data frame
+  SASA_common_ini <- read.table(paste0("/Users/song/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/AP_analysis/Tripeptide/SASA_score/SASA_result_with_common_mon_ini_C",pos,".txt"), header = FALSE, col.names = c("Amino1", "Amino2", "Amino3", "ratio_mon_fin", "ratio_dim_fin"))
+  
+  # Create a new column combining Amino1, Amino2, and Amino3
+  SASA_common_ini$label <- paste0(SASA_common_ini$Amino1, SASA_common_ini$Amino2, SASA_common_ini$Amino3)
+  SASA_common_ini$Category <- mapply(classify_sequence, SASA_common_ini$Amino1, SASA_common_ini$Amino2, SASA_common_ini$Amino3)
+  
+  # Create the scatter plot
+  SASA_common_ini_plt<-{
+    ggplot(SASA_common_ini, aes(y = ratio_dim_fin, x = ratio_mon_fin, col = Category)) +
+      geom_point() +  # Plot points
+      geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") +  # Add dashed line y = x
+      labs(y = "Dimer APs", x = "Monomer APs") +
+      plttheme +
+      scale_x_continuous(limits = c(1, 5)) +
+      scale_y_continuous(limits = c(1, 5)) # Apply minimal theme
+  }
+  assign(paste0("AP_scatter_common_ini_C_position_", pos), ggplotly(SASA_common_ini_plt))
+  ggsave(paste0(APplotDir,"AP_scatter_common_ini_C_position_", pos, ".png"),
+         plot = SASA_common_ini_plt, dpi = 1100, width = 4, height = 2, units = "in")
+  
+  # Merge data and filtered_data based on matching Amino1, Amino2, and Amino3
+  merged_data_mon <- merge(filtered_data_my, filtered_data, by = c("Amino1", "Amino2", "Amino3"), suffixes = c("_my", "_lit"))
+  merged_data_mon$Seq<-paste0(merged_data_mon$Amino1,merged_data_mon$Amino2,merged_data_mon$Amino3)
+  # Add a classification column to merged_data
+  merged_data_mon$Category <- mapply(classify_sequence, merged_data_mon$Amino1, merged_data_mon$Amino2, merged_data_mon$Amino3)
+  
+  # Plot with categories
+  AP_scatter_mon_plt <- {
+    ggplot(merged_data_mon) +
+      geom_point(aes(x = AP_lit, y = AP_my, col = Category, text = Seq)) +
+      geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") +  # Add y = x line
+      labs(title = paste0("AP Scores for Tripeptide \nC at Position",pos), 
+           x = "AP_unstapled_2015", y = "AP_unstapled_my_run") +
+      plttheme +
+      scale_x_continuous(limits = c(1, 2.5)) +
+      scale_y_continuous(limits = c(1, 2.5))
+  }
+  
+  assign(paste0("AP_scatter_mon_C_position_", pos), ggplotly(AP_scatter_mon_plt))
+  ggsave(paste0(APplotDir,"AP_scatter_mon_C_position_", pos, ".png"),
+         plot = AP_scatter_mon_plt, dpi = 1100, width = 4, height = 2, units = "in")
+  
+  diff_range<-c(-0.33,0.8)#c(min(merged_data$AP_diff),max(merged_data$AP_diff))
+  # Combine the new differences from the current position with the existing top 10 list
+  combined_diff <- rbind(top_10_diff, merged_data)
+  
+  # Sort the combined list by the absolute differences and keep the top 10
+  top_10_diff <- {
+    combined_diff %>%
+      arrange(desc(abs(AP_diff))) %>%
+      head(10)
+  }
+  # Create the heatmap plot of the differences
+  diff_plot <- {ggplot(merged_data, aes(x = get(x_axis), y = get(y_axis), fill = AP_diff)) +
+      geom_tile(color = "white", na.rm = TRUE) +  # Leave missing data as blank
+      scale_fill_viridis_c(direction = -1, na.value = "transparent", limits = diff_range) +  # Set color scale limits
+      labs(title = paste("AP Score Differences \nfor C at Position", pos), 
+           x = x_axis, y = y_axis) +
+      plttheme+
+      theme(axis.text.x = element_text(angle = , hjust = 1))
+  }
+  # Save the ggplotly plot to a unique variable name
+  assign(paste0("diff_heatmap_C_position_", pos), ggplotly(diff_plot))
+  
+  data$AP <- squish(data$AP, range = c(1, 2.5))
+  
+  # Create the heatmap plot
+  plot <- { ggplot(data, aes(x = get(x_axis), y = get(y_axis), fill = AP)) +
+      geom_tile(color = "white", na.rm = TRUE) +  # Leave missing data as blank
+      scale_fill_viridis_c(direction = -1, na.value = "transparent",limits = c(1, 2.5)) +  # Built-in viridis-like scale
+      labs(title = paste("AP Scores for Stapled Dimer \nwith C at Position", pos), 
+           x = x_axis, y = y_axis) +
+      plttheme+
+      theme(axis.text.x = element_text(angle = , hjust = 1))#+
+    #scale_fill_continuous(limits = c(1, 2.5))
+  }
+  # Save the ggplotly plot to a unique variable name
+  assign(paste0("plot_C", pos), ggplotly(plot))
+  
+  # Adjust AP values to be within the specified limits using squish
+  filtered_data$AP <- squish(filtered_data$AP, range = c(1, 2.5))
+  
+  # Create the heatmap plot
+  heatmap_plot <- {ggplot(filtered_data, aes(x = get(x_axis), y = get(y_axis), fill = AP)) +
+      geom_tile(color = "white", na.rm = TRUE) +  # Leave missing data as blank
+      scale_fill_viridis_c(direction = -1,na.value = "transparent", limits = c(1, 2.5)) +  # Set color scale limits
+      labs(title = paste("AP Scores for Tripeptide \nC at Position", pos, "(By Frederix et al.)"), 
+           x = x_axis, y = y_axis) +
+      plttheme+
+      theme(axis.text.x = element_text(angle = , hjust = 1))
+  }
+  # Save the ggplotly plot to a unique variable name
+  assign(paste0("heatmap_C_position_", pos), ggplotly(heatmap_plot))
+  
+  # AP_scatter_plt<-{
+  #   ggplot(merged_data)+geom_point(aes(x=AP_mon,y=AP_dim,col=Seq))+
+  #     labs(title = paste("AP Scores for Tripeptide \nC at Position"), 
+  #          x="AP_unstapled",y="AP_stapled")+
+  #     plttheme+
+  #     scale_x_continuous(limits = c(1,2.5))+
+  #     scale_y_continuous(limits = c(1,2.5))
+  #   
+  # }
+  
+  
+  # Save the difference heatmap plot
+  ggsave(paste0(APplotDir,"AP_diff_C", pos, ".png"),
+         plot = diff_plot, dpi = 1100, width = 4, height = 2, units = "in")
+  
+  # Save the AP scores plot for the stapled dimer
+  ggsave(paste0(APplotDir,"AP_mon_C", pos, ".png"),
+         plot = plot, dpi = 1100, width = 4, height = 2, units = "in")
+  
+  # Save the AP scores heatmap plot for the tripeptide
+  ggsave(paste0(APplotDir,"AP_dim_C", pos, ".png"),
+         plot = heatmap_plot, dpi = 1100, width = 4, height = 2, units = "in")
+  
+  # Save the AP scores heatmap plot for the tripeptide
+  ggsave(paste0(APplotDir,"AP_Scatter", pos, ".png"),
+         plot = AP_scatter_plt, dpi = 1100, width = 4, height = 2, units = "in")
+  # Save the AP scores heatmap plot for the tripeptide
+  ggsave(paste0(APplotDir,"AP_Scatter_myrun", pos, ".png"),
+         plot = AP_scatter_my_plt, dpi = 1100, width = 4, height = 2, units = "in")
+}
+
+```
+
+```{r setup5 tripeptide martini common ini, include=FALSE}
+
+for (pos in positions) {
+  
+  # Read the txt file into a data frame
+  SASA_common_ini <- read.table(paste0("/Users/song/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/AP_analysis/Tripeptide/SASA_score/SASA_result_with_common_mon_ini_C",pos,".txt"), header = FALSE, col.names = c("Amino1", "Amino2", "Amino3", "ratio_mon_fin", "ratio_dim_fin"))
+  
+  # Create a new column combining Amino1, Amino2, and Amino3
+  SASA_common_ini$label <- paste0(SASA_common_ini$Amino1, SASA_common_ini$Amino2, SASA_common_ini$Amino3)
+  SASA_common_ini$Category <- mapply(classify_sequence, SASA_common_ini$Amino1, SASA_common_ini$Amino2, SASA_common_ini$Amino3)
+  
+  # Create the scatter plot
+  SASA_common_ini_plt<-{
+    ggplot(SASA_common_ini, aes(y = ratio_dim_fin, x = ratio_mon_fin, col = Category, text = label)) +
+      geom_point() +  # Plot points
+      geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") +  # Add dashed line y = x
+      labs(y = "Stapled AP w/ mon_ini", x = "Unstapled AP my run") +
+      plttheme #+
+    #scale_x_continuous(limits = c(1, 2.5)) +
+    #scale_y_continuous(limits = c(1, 2.5)) # Apply minimal theme
+  }
+  assign(paste0("AP_scatter_common_ini_C_position_", pos), ggplotly(SASA_common_ini_plt))
+  ggsave(paste0(APplotDir,"AP_scatter_common_ini_C_position_", pos, ".png"),
+         plot = SASA_common_ini_plt, dpi = 1100, width = 4, height = 2, units = "in")
+  
+  # Merge data and filtered_data based on matching Amino1, Amino2, and Amino3
+  merged_data_mon <- merge(filtered_data_my, filtered_data, by = c("Amino1", "Amino2", "Amino3"), suffixes = c("_my", "_lit"))
+  merged_data_mon$Seq<-paste0(merged_data_mon$Amino1,merged_data_mon$Amino2,merged_data_mon$Amino3)
+  # Add a classification column to merged_data
+  merged_data_mon$Category <- mapply(classify_sequence, merged_data_mon$Amino1, merged_data_mon$Amino2, merged_data_mon$Amino3)
+  
+  # Plot with categories
+  AP_scatter_mon_plt <- {
+    ggplot(merged_data_mon) +
+      geom_point(aes(x = AP_lit, y = AP_my, col = Category, text = Seq)) +
+      geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") +  # Add y = x line
+      labs(title = paste0("AP Scores for Tripeptide \nC at Position",pos), 
+           x = "AP_unstapled_2015", y = "AP_unstapled_my_run") +
+      plttheme +
+      scale_x_continuous(limits = c(1, 2.5)) +
+      scale_y_continuous(limits = c(1, 2.5))
+  }
+  
+  assign(paste0("AP_scatter_mon_C_position_", pos), ggplotly(AP_scatter_mon_plt))
+  ggsave(paste0(APplotDir,"AP_scatter_mon_C_position_", pos, ".png"),
+         plot = AP_scatter_mon_plt, dpi = 1100, width = 4, height = 2, units = "in")
+  
+  diff_range<-c(-0.33,0.8)#c(min(merged_data$AP_diff),max(merged_data$AP_diff))
+  # Combine the new differences from the current position with the existing top 10 list
+  combined_diff <- rbind(top_10_diff, merged_data)
+  
+  # Sort the combined list by the absolute differences and keep the top 10
+  top_10_diff <- {
+    combined_diff %>%
+      arrange(desc(abs(AP_diff))) %>%
+      head(10)
+  }
+  # Create the heatmap plot of the differences
+  diff_plot <- {ggplot(merged_data, aes(x = get(x_axis), y = get(y_axis), fill = AP_diff)) +
+      geom_tile(color = "white", na.rm = TRUE) +  # Leave missing data as blank
+      scale_fill_viridis_c(direction = -1, na.value = "transparent", limits = diff_range) +  # Set color scale limits
+      labs(title = paste("AP Score Differences \nfor C at Position", pos), 
+           x = x_axis, y = y_axis) +
+      plttheme+
+      theme(axis.text.x = element_text(angle = , hjust = 1))
+  }
+  # Save the ggplotly plot to a unique variable name
+  assign(paste0("diff_heatmap_C_position_", pos), ggplotly(diff_plot))
+  
+  data$AP <- squish(data$AP, range = c(1, 2.5))
+  
+  # Create the heatmap plot
+  plot <- { ggplot(data, aes(x = get(x_axis), y = get(y_axis), fill = AP)) +
+      geom_tile(color = "white", na.rm = TRUE) +  # Leave missing data as blank
+      scale_fill_viridis_c(direction = -1, na.value = "transparent",limits = c(1, 2.5)) +  # Built-in viridis-like scale
+      labs(title = paste("AP Scores for Stapled Dimer \nwith C at Position", pos), 
+           x = x_axis, y = y_axis) +
+      plttheme+
+      theme(axis.text.x = element_text(angle = , hjust = 1))#+
+    #scale_fill_continuous(limits = c(1, 2.5))
+  }
+  # Save the ggplotly plot to a unique variable name
+  assign(paste0("plot_C", pos), ggplotly(plot))
+  
+  # Adjust AP values to be within the specified limits using squish
+  filtered_data$AP <- squish(filtered_data$AP, range = c(1, 2.5))
+  
+  # Create the heatmap plot
+  heatmap_plot <- {ggplot(filtered_data, aes(x = get(x_axis), y = get(y_axis), fill = AP)) +
+      geom_tile(color = "white", na.rm = TRUE) +  # Leave missing data as blank
+      scale_fill_viridis_c(direction = -1,na.value = "transparent", limits = c(1, 2.5)) +  # Set color scale limits
+      labs(title = paste("AP Scores for Tripeptide \nC at Position", pos, "(By Frederix et al.)"), 
+           x = x_axis, y = y_axis) +
+      plttheme+
+      theme(axis.text.x = element_text(angle = , hjust = 1))
+  }
+  # Save the ggplotly plot to a unique variable name
+  assign(paste0("heatmap_C_position_", pos), ggplotly(heatmap_plot))
+  
+  # AP_scatter_plt<-{
+  #   ggplot(merged_data)+geom_point(aes(x=AP_mon,y=AP_dim,col=Seq))+
+  #     labs(title = paste("AP Scores for Tripeptide \nC at Position"), 
+  #          x="AP_unstapled",y="AP_stapled")+
+  #     plttheme+
+  #     scale_x_continuous(limits = c(1,2.5))+
+  #     scale_y_continuous(limits = c(1,2.5))
+  #   
+  # }
+  
+  
+  # Save the difference heatmap plot
+  ggsave(paste0(APplotDir,"AP_diff_C", pos, ".png"),
+         plot = diff_plot, dpi = 1100, width = 4, height = 2, units = "in")
+  
+  # Save the AP scores plot for the stapled dimer
+  ggsave(paste0(APplotDir,"AP_mon_C", pos, ".png"),
+         plot = plot, dpi = 1100, width = 4, height = 2, units = "in")
+  
+  # Save the AP scores heatmap plot for the tripeptide
+  ggsave(paste0(APplotDir,"AP_dim_C", pos, ".png"),
+         plot = heatmap_plot, dpi = 1100, width = 4, height = 2, units = "in")
+  
+  # Save the AP scores heatmap plot for the tripeptide
+  ggsave(paste0(APplotDir,"AP_Scatter", pos, ".png"),
+         plot = AP_scatter_plt, dpi = 1100, width = 4, height = 2, units = "in")
+  # Save the AP scores heatmap plot for the tripeptide
+  ggsave(paste0(APplotDir,"AP_Scatter_myrun", pos, ".png"),
+         plot = AP_scatter_my_plt, dpi = 1100, width = 4, height = 2, units = "in")
+}
+
+```
+
+```{r comon initial setup, include=FALSE}
+
+# Loop through each position of C (1, 2, 3)
+for (pos in positions) {
+  
+  
+  # Rename columns for clarity
+  colnames(data) <- c("Amino1", "Amino2", "Amino3", "AP")
+  # Reorder the relevant columns based on the position of C
+  
+  SASA_common_ini <- read.table(paste0("/Users/song/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/AP_analysis/Tripeptide/SASA_score/SASA_result_with_common_mon_ini_C",pos,".txt"), header = FALSE, col.names = c("Amino1", "Amino2", "Amino3", "ratio_mon_fin", "ratio_dim_fin"))
+  
+  # Create a new column combining Amino1, Amino2, and Amino3
+  SASA_common_ini$label <- paste0(SASA_common_ini$Amino1, SASA_common_ini$Amino2, SASA_common_ini$Amino3)
+  SASA_common_ini$Category <- mapply(classify_sequence, SASA_common_ini$Amino1, SASA_common_ini$Amino2, SASA_common_ini$Amino3)
+  SASA_common_ini$label<-paste(SASA_common_ini$Amino1,SASA_common_ini$Amino2,SASA_common_ini$Amino3,sep="-")
+  if (max(c(SASA_common_ini$ratio_mon_fin,SASA_common_ini$ratio_dim_fin))>6 ) {
+    stop("range too low")
+  }
+  if (min(c(SASA_common_ini$ratio_mon_fin,SASA_common_ini$ratio_dim_fin))<.5 ) {
+    stop("range too small")
+  }
+  # Create the scatter plot
+  SASA_common_ini_plt<-{
+    ggplot(SASA_common_ini, aes(y = ratio_dim_fin, x = ratio_mon_fin, col = Category,text=label)) +
+      geom_point() +  # Plot points
+      geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") +  # Add dashed line y = x
+      labs(y = "Dimer APs", x = "Monomer APs") +
+      plttheme +
+      scale_x_continuous(limits = c(0.5, 6)) +
+      scale_y_continuous(limits = c(0.5, 6)) +
+      coord_fixed(ratio = 1)+
+      labs(col="Side Chain Type")+
+      theme(legend.position = "bottom"
+      )+
+      guides(color = guide_legend(nrow = 4), byrow = TRUE)  # Break legend into x rows
+    
+    
+  }
+  assign(paste0("AP_scatter_common_ini_C_position_", pos), ggplotly(SASA_common_ini_plt))
+  if (pos==3) {
+    plttitle<-paste("Tripeptide n-X-X-C-c")
+  } else if (pos==2) {
+    plttitle<-paste("Tripeptide n-X-C-X-c")
+  } else {
+    plttitle<-paste("Tripeptide n-C-X-X-c")
+  }
+  ggsave(paste0(APplotDir,"AP_scatter_common_ini_C_position_", pos, ".png"),
+         plot = SASA_common_ini_plt+theme(legend.position = "none")+labs(title = plttitle), dpi = 1100, width = 8, height = 8, units = "cm")
+  
+  
+}
+SASA_common_ini_pltextrat<-ggplotGrob(SASA_common_ini_plt)
+legend<-SASA_common_ini_pltextrat$grobs[which(sapply(SASA_common_ini_pltextrat$grobs, function(x) x$name) == "guide-box")][[1]]
+ggsave(paste0(APplotDir,"AP_scatter_common_ini_legend.png"),
+       plot = grid.arrange(legend)#SASA_common_ini_plt
+       , dpi = 1100, width = 24, height = 3
+       , units = "cm")
+```
+
+
+
+## C-Amino2-Amino3
+
+```{r C-Amino2-Amino3}
+ggplotly(AP_scatter_C_position_1)
+ggplotly(AP_scatter_myrun_C_position_1)
+ggplotly(AP_scatter_common_ini_C_position_1)
+ggplotly(AP_scatter_mon_C_position_1)
+ggplotly(plot_C1)
+ggplotly(heatmap_C_position_1)
+ggplotly(diff_heatmap_C_position_1)
+```
+
+## Amino1-C-Amino3
+
+```{r Amino1-C-Amino3}
+ggplotly(AP_scatter_C_position_2)
+ggplotly(AP_scatter_myrun_C_position_2)
+ggplotly(AP_scatter_common_ini_C_position_2)
+ggplotly(AP_scatter_mon_C_position_2)
+ggplotly(plot_C2)
+ggplotly(heatmap_C_position_2)
+ggplotly(diff_heatmap_C_position_2)
+```
+
+## Amino1-Amino2-C
+
+```{r Amino1-Amino2-C}
+ggplotly(AP_scatter_C_position_3)
+ggplotly(AP_scatter_myrun_C_position_3)
+ggplotly(AP_scatter_common_ini_C_position_3)
+ggplotly(AP_scatter_mon_C_position_3)
+ggplotly(plot_C3)
+ggplotly(heatmap_C_position_3)
+ggplotly(diff_heatmap_C_position_3)
+```
+
+## Top 10 candidates
+- Top 10 sequences with the largest change in AP score (AP_diff)
+```{r top10, echo = TRUE}
+print(top_10_diff)
+```
+
+
+## Equalibritated M2 sim?
+
+```{r}
+
+# Directory path
+dir_path <- "/Users/song/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/AP_analysis/Tripeptide/SASA_score/out/"
+
+# Function to generate or select random tripeptides with exactly one 'C'
+generate_random_tripeptides <- function(n) {
+  amino_acids <- c("A", "C", "D", "E", "F", "G", "H", "I", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "V", "W", "Y")
+  tripeptides <- vector("character", n)
+  for (i in 1:n) {
+    peptide <- sample(amino_acids[amino_acids != "C"], 2)
+    peptide <- c(peptide, "C")
+    tripeptides[i] <- paste(sample(peptide), collapse = "_")
+  }
+  return(tripeptides)
+}
+
+
+# Function to read .xvg files and clean the data
+read_xvg_data <- function(file) {
+  # Read the file, ignoring lines that start with '#' or '@'
+  data <- readLines(file)
+  # Filter out lines starting with '#' or '@'
+  data <- data[!grepl("^[#@]", data)]
+  # Convert the remaining lines into a data frame (assuming the data is whitespace-separated)
+  data <- read.table(text = data, header = FALSE)
+  return(data)
+}
+
+
+
+```
+```{r}
+
+# Generate 10 random tripeptides containing exactly one 'C'
+tripeptides <- generate_random_tripeptides(10)
+
+# Loop over the tripeptides, read corresponding .xvg files, and prepare for plotting
+for (peptide in tripeptides) {
+  
+  # Initialize an empty list to store data for plotting
+  plot_data <- list()
+  
+  # Construct file names
+  file1 <- paste0(dir_path, peptide, ".xvg")
+  file2 <- paste0(dir_path, peptide, "_mon.xvg")
+  
+  # Check if files exist, then read and store the data
+  if (file.exists(file1)) {
+    data1 <- read_xvg_data(file1)
+    plot_data[[peptide]] <- data.frame(x = data1$V1, y = data1$V2, peptide = peptide)
+  }
+  if (file.exists(file2)) {
+    data2 <- read_xvg_data(file2)
+    plot_data[[paste0(peptide, "_mon")]] <- data.frame(x = data2$V1, y = data2$V2, peptide = paste0(peptide, "_mon"))
+  }
+  # Combine all data into a single data frame
+  plot_df <- do.call(rbind, plot_data)
+  
+  # Plot using ggplot
+  print(ggplot(plot_df, aes(x = x/1000, y = max(y)/y, color = peptide)) +
+          geom_line() +
+          labs(x = "t (ns)", y = "AP", title = peptide) +
+          theme_minimal()+ylim(1,3)
+  )
+}
+```
+
+
+
+
+## Equalibritated M3 sim?
+
+```{r}
+
+# Directory path
+dir_path <- "/Users/song/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/AP_analysis/Tripeptide/SASA_score_M3/out/"
+dir_path_M2 <- "/Users/song/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/AP_analysis/Tripeptide/SASA_score/out/"
+# Function to generate or select random tripeptides with exactly one 'C'
+generate_random_tripeptides <- function(n) {
+  amino_acids <- c("A", "C", "D", "E", "F", "G", "H", "I", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "V", "W", "Y")
+  tripeptides <- vector("character", n)
+  for (i in 1:n) {
+    peptide <- sample(amino_acids[amino_acids != "C"], 2)
+    peptide <- c(peptide, "C")
+    tripeptides[i] <- paste(sample(peptide), collapse = "_")
+  }
+  return(tripeptides)
+}
+
+
+# Function to read .xvg files and clean the data
+read_xvg_data <- function(file) {
+  # Read the file, ignoring lines that start with '#' or '@'
+  data <- readLines(file)
+  # Filter out lines starting with '#' or '@'
+  data <- data[!grepl("^[#@]", data)]
+  # Convert the remaining lines into a data frame (assuming the data is whitespace-separated)
+  data <- read.table(text = data, header = FALSE)
+  return(data)
+}
+
+
+
+```
+```{r}
+
+# Generate 10 random tripeptides containing exactly one 'C'
+tripeptides <- generate_random_tripeptides(10)
+
+# Loop over the tripeptides, read corresponding .xvg files, and prepare for plotting
+for (peptide in tripeptides) {
+  
+  # Initialize an empty list to store data for plotting
+  plot_data <- list()
+  
+  # Construct file names
+  file1 <- paste0(dir_path, peptide, ".xvg")
+  
+  
+  # Check if files exist, then read and store the data
+  while (!file.exists(file1)) {
+    peptide <- generate_random_tripeptides(1)
+    if (!peptide %in% tripeptides ) {
+      file1 <- paste0(dir_path, peptide, ".xvg")
+      
+    }
+  }
+  file2 <- paste0(dir_path, peptide, "_mon.xvg")
+  file3 <- paste0(dir_path_M2, peptide, ".xvg")
+  data1 <- read_xvg_data(file1)
+  plot_data[[peptide]] <- data.frame(x = data1$V1, y = data1$V2, peptide = peptide)
+  
+  if (file.exists(file2)) {
+    data2 <- read_xvg_data(file2)
+    plot_data[[paste0(peptide, "_mon")]] <- data.frame(x = data2$V1, y = data2$V2, peptide = paste0(peptide, "_mon"))
+  }
+  if (file.exists(file3)) {
+    data3 <- read_xvg_data(file3)
+    plot_data[[paste0(peptide, "_M2")]] <- data.frame(x = data3$V1, y = data3$V2, peptide = paste0(peptide, "_M2"))
+  }
+  # Combine all data into a single data frame
+  plot_df <- do.call(rbind, plot_data)
+  
+  # Plot using ggplot
+  print(ggplot(plot_df, aes(x = x/1000, y = max(y)/y, color = peptide)) +
+          geom_line() +
+          labs(x = "t (ns)", y = "AP", title = peptide) +
+          theme_minimal()+ylim(1,3)
+  )
+  
+}
+```
+
+
+
+
+# Dipeptide cluster size dist
+```{r}
+load("~/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/Csizedist/dimer_cdist.rda")
+# Manually prepare the data for plotting
+plot_data <- data.frame()
+
+# First column is the x-axis
+x_values <- dimer_sizehis[, 1]  # Use the first column for x-axis values
+
+# Loop through the remaining columns for y-axis values
+for (i in 2:ncol(dimer_sizehis)) {
+  y_values <- dimer_sizehis[, i]  # Select the current column for y-axis
+  temp_data <- data.frame(
+    x = x_values,
+    y = y_values,
+    Sequence = colnames(dimer_sizehis)[i]  # Add the column name as Sequence
+  )
+  # Append to the plot_data
+  plot_data <- rbind(plot_data, temp_data)
+}
+
+# Plot using ggplot2
+ggplotly(ggplot(plot_data, aes(x = log(x), y = log(y), color = Sequence)) +
+           geom_line() +
+           labs(x = colnames(dimer_sizehis)[1], y = "Value", color = "Sequence") +
+           theme_minimal())
+```
+```{r}
+# File paths and corresponding data names
+files <- list(
+  dimer = "~/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/Csizedist/dimer_cdist.rda",
+  monomer = "~/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/Csizedist/monomer_cdist.rda"
+)
+
+# Initialize a list to store plots
+plots <- list()
+
+pltxscale<-{scale_x_continuous(
+  limits = log10(c(1, 300)),  # Set x-axis range in log base 10
+  breaks = log10(c(1, 2, 10, 100, 300)),  # Set major breaks
+  labels = c("1", "2","10", "100", "300")  # Label in numeric scale
+)} 
+pltlabs<- labs(x = "Cluster Size", y = "Frequency", color = "Sequence")
+# Loop through files and generate plots
+for (state in names(files)) {
+  # Load the file
+  load(files[[state]])
+  
+  # Select the appropriate data based on the state
+  data <- if (state == "dimer") dimer_sizehis else monomer_sizehis
+  
+  # Prepare data for plotting
+  plot_data <- data.frame()
+  x_values <- data[, 1]  # Use the first column for x-axis values
+  
+  for (i in 2:ncol(data)) {
+    y_values <- data[, i]  # Select the current column for y-axis
+    temp_data <- data.frame(
+      x = x_values,
+      y = y_values,
+      Sequence = colnames(data)[i]  # Add the column name as Sequence
+    )
+    plot_data <- rbind(plot_data, temp_data)
+  }
+  plot_data$x<-if (state == "dimer") plot_data$x*2 else plot_data$x
+  plot_data$cat<-mapply(classify_sequence_dipeptide, sapply(strsplit(plot_data$Sequence, "_"), function(x) {
+    if(x[1] == "C") x[2] else x[1]
+  }),"C")
+  plttitle<-ifelse(state == "dimer","Dimer","Monomer")
+  pltyscale<-{
+    scale_y_continuous(
+      limits = c(min(log10(plot_data$y[which(plot_data$y!=0)])),0),  # Set y-axis range in log base 10
+      breaks = log10(c(.001, .1, 1#, .5
+      )),  # Set major breaks
+      labels = c(".001", ".1", "1"#, ".5"
+      )  # Label in numeric scale
+    ) 
+  }
+  
+  # Generate the plot and store in the list
+  plots[[state]] <- list()
+  plots[[state]][["all"]]<-ggplot(plot_data, aes(x = log10(x), y = log10(y), color = Sequence)) +
+    geom_point()+
+    plttheme +
+    pltxscale +
+    pltyscale +
+    pltlabs+
+    labs(title = plttitle) 
+  plots[[state]][["subplot"]]<-list()
+  counter<-1
+  #subname<-c("Polar or Charged", "Aromatic or Hydrophobic")
+  subname<-c("Good Candiates Based on APs", "Bad Candiates Based on APs")
+  
+  #for (subgroupname in list(c("Aromatic","Hydrophobic"),c("Polar Uncharged","Positively Charged", "Negatively Charged"))) {
+  exlist<-c(#"Y_C",
+    "S_C","T_C","H_C","C_H",#"C_Y",
+    "C_S","C_T")
+  for (subgroupname in list(exlist,setdiff( unique(plot_data$Sequence), exlist))) {
+    plttitlesub<-paste(plttitle,subname[counter],sep=": ")
+    counter<-counter+1
+    plots[[state]][["subplot"]][[paste(subgroupname, collapse = ", ")]]<-ggplot(plot_data[plot_data$Sequence %in% subgroupname,], aes(x = log10(x), y = log10(y), color = Sequence)) +
+      geom_point()+
+      plttheme +
+      pltxscale +
+      pltyscale +
+      pltlabs+
+      labs(title = plttitlesub) 
+    
+  }
+  ggsave(paste0(APplotDir,"Dipeptide_clustersize_",state,".png"),
+         plot = plots[[state]]+theme(legend.position = "none")
+         , dpi = 1100, width = 16, height = 4
+         , units = "cm")
+}
+
+# Display the plots
+ggplotly(plots$dimer$all)
+ggplotly(plots$monomer$all)
+
+
+#powerlog fitting?
+
+
+# Modify the individual plots:
+# - Remove the x-axis title from the top plot (dimer) but keep its tick marks.
+# - Ensure the bottom plot (monomer) has the x-axis title "cluster-sized".
+# - Remove individual y-axis titles from both.
+p_monomer <- plots$monomer +
+  theme(axis.title.x = element_blank(),
+        axis.title.y = element_blank(),legend.position = "none")
+
+p_dimer <- plots$dimer +
+  theme(axis.title.y = element_blank(),legend.position = "none")
+
+# Combine the two plots vertically.
+combined <- plot_grid(p_monomer,p_dimer, ncol = 1, align = "v")
+
+# Add a common y-axis title to the left side.
+combined_final <- ggdraw() +
+  # Shift the combined plot to the right by setting x = ..., leaving extra room on the left.
+  draw_plot(combined, x = 0.02, y = 0, width = 0.98, height = 1) +
+  # Place the y-axis label in the left margin
+  draw_label("Frequency", x = 0.02, y = 0.5, angle = 90, size = 12)
+
+ggsave(paste0(APplotDir,"Dipeptide_clustersize_combine.png"),
+       plot = combined_final
+       , dpi = 1100, width = 16, height = 8
+       , units = "cm")
+```
+```{r}
+p_monomer1 <- plots$monomer$subplot[[1]]  +
+  theme(axis.title.x = element_blank(),
+        axis.title.y = element_blank(),legend.position = "none")
+p_monomer2 <- plots$monomer$subplot[[2]]  +
+  theme(axis.title.x = element_blank(),
+        axis.title.y = element_blank(),legend.position = "none")
+
+p_dimer1 <- plots$dimer$subplot[[1]] +
+  theme(axis.title.y = element_blank(),legend.position = "none")
+p_dimer2 <- plots$dimer$subplot[[2]] +
+  theme(axis.title.y = element_blank(),legend.position = "none")
+
+# Combine the two plots vertically.
+combined <- plot_grid(p_monomer1,p_monomer2,p_dimer1,p_dimer2, ncol = 2, align = "v")
+
+# Add a common y-axis title to the left side.
+combined_final <- ggdraw() +
+  # Shift the combined plot to the right by setting x = ..., leaving extra room on the left.
+  draw_plot(combined, x = 0.02, y = 0, width = 0.98, height = 1) +
+  # Place the y-axis label in the left margin
+  draw_label("Frequency", x = 0.02, y = 0.5, angle = 90, size = 12)
+
+ggsave(paste0(APplotDir,"Dipeptide_clustersize_combine_breakdown.png"),
+       plot = combined_final
+       , dpi = 1100, width = 24, height = 8
+       , units = "cm")
+for (i in 1:2) {
+  print(ggplotly(plots$monomer$subplot[[i]]))
+  print(ggplotly(plots$dimer$subplot[[i]]))
+  
+}
+```
+
+
+
+# for poster, graph
+```{r}
+library(igraph)
+library(ggraph)
+library(ggplot2)
+
+# Define nodes: common amino acid atoms
+atoms <- data.frame(
+  id = c("N", "CA", "C", "O", "CB", "CG", "CD", "OE1", "OE2", "NZ"),
+  label = c("N", "CA", "C", "O", "CB", "CG", "CD", "OE1", "OE2", "NZ")
+)
+
+# Define covalent edges (typical backbone and side-chain bonds)
+cov_edges <- data.frame(
+  from = c("N", "CA", "C", "CA", "CB","NZ","CD"),
+  to   = c("CA", "C", "O", "CB", "CG","OE2","OE1"),
+  type = rep("Covalent", 7)
+)
+
+# Define non-covalent edges (e.g., hydrogen bonds)
+noncov_edges <- data.frame(
+  from = c("O", "OE1", "CG", "CD","OE1"),
+  to   = c("N", "NZ", "CD", "OE1","N"),
+  type = rep("Non-Covalent", 5)
+)
+
+# Combine edges ensuring each edge is exclusively one type
+edges <- rbind(cov_edges, noncov_edges)
+
+# Create the graph object
+graph <- graph_from_data_frame(edges, vertices = atoms, directed = FALSE)
+
+# Create the graph plot with font size set to 7 and line width set to 0.5
+graph_plot <- ggraph(graph, layout = "stress") +
+  geom_edge_link(aes(color = type, linetype = type), size = 0.5) +
+  geom_node_point(shape = 21, size = 10, fill = "white", color = "black", stroke = 0.5) +
+  geom_node_text(aes(label = label), size = 3, color = "black", vjust = 0.5) +
+  scale_edge_color_manual(values = c("Covalent" = "blue", "Non-Covalent" = "red")) +
+  scale_edge_linetype_manual(values = c("Covalent" = "solid", "Non-Covalent" = "dashed")) +
+  theme_void()+
+  theme(legend.position = c(0.3,0.8))
+
+# Save the plot with an appropriate file name
+ggsave(
+  filename = paste0(APplotDir, "graph_representation_common_amino_acids.png"),
+  plot = graph_plot,
+  dpi = 1100,
+  width = 10,
+  height =10,
+  units = "cm"
+)
+```
+
+
+# Clusdist visualization
+```{r}
+# File paths and corresponding data names
+files <- list(
+  dimer = "~/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/Csizedist/dimer_cdist_tripeptide.rda",
+  monomer = "~/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/Csizedist/monomer_cdist_tripeptide.rda"
+)
+
+
+
+pltxscale<-{scale_x_continuous(
+  limits = log10(c(1, 300)),  # Set x-axis range in log base 10
+  breaks = log10(c(1, 2, 10, 100, 300)),  # Set major breaks
+  labels = c("1", "2","10", "100", "300")  # Label in numeric scale
+)} 
+pltlabs<- labs(x = "Cluster Size", y = "Frequency", color = "")
+# Loop through files and generate plots
+for (state in names(files)) {
+  # Load the file
+  load(files[[state]])
+  # Select the appropriate data based on the state
+  data <- if (state == "dimer") dimer_sizehis else monomer_sizehis
+  
+  # Prepare data for plotting
+  plot_data <- data.frame()
+  x_values <- data[, 1]  # Use the first column for x-axis values
+  
+  for (i in 2:ncol(data)) {
+    y_values <- data[, i]  # Select the current column for y-axis
+    temp_data <- data.frame(
+      x = x_values,
+      y = y_values,
+      Sequence = colnames(data)[i]  # Add the column name as Sequence
+    )
+    plot_data <- rbind(plot_data, temp_data)
+  }
+  plot_data$x<-if (state == "dimer") plot_data$x*2 else plot_data$x
+  plot_data$state<-ifelse(state == "dimer","Dimer","Monomer")
+  assign(paste0(ifelse( (state == "dimer"), "dimer_sizehis", "monomer_sizehis"),"_plot_data"),plot_data)
+}
+seqlist<-c(#"L_V_C",
+  "C_P_V","C_G_I","T_A_C","C_A_S"
+  )
+
+for (seq in seqlist) {
+  residues <- unlist(strsplit(seq, "_"))
+  pos <- which(residues == "C")
+  # Reorder the relevant columns based on the position of C
+  
+  SASA_common_ini <- read.table(paste0("/Users/song/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/AP_analysis/Tripeptide/SASA_score/SASA_result_with_common_mon_ini_C",pos,".txt"), header = FALSE, col.names = c("Amino1", "Amino2", "Amino3", "ratio_mon_fin", "ratio_dim_fin"))
+  
+  # Create a new column combining Amino1, Amino2, and Amino3
+  SASA_common_ini$label <- paste0(SASA_common_ini$Amino1, SASA_common_ini$Amino2, SASA_common_ini$Amino3)
+  SASA_common_ini$Category <- mapply(classify_sequence, SASA_common_ini$Amino1, SASA_common_ini$Amino2, SASA_common_ini$Amino3)
+  SASA_common_ini$label<-paste(SASA_common_ini$Amino1,SASA_common_ini$Amino2,SASA_common_ini$Amino3,sep="_")
+  APmon<-round(SASA_common_ini[which(SASA_common_ini$label==seq),4],digits = 2)
+  APdim<-round(SASA_common_ini[which(SASA_common_ini$label==seq),5],digits = 2)
+  
+  # Initialize a list to store plots
+  plots <- list()
+  plotdata_comb<-c()
+  for (state in names(files)) {
+    data <- if (state == "dimer") dimer_sizehis_plot_data else monomer_sizehis_plot_data
+    plotdata_comb<-rbind(plotdata_comb,data[which(data$Sequence==seq),]
+    )
+  }
+  pltyscale<-{
+    scale_y_continuous(
+      limits = c(min(log10(plotdata_comb$y[which(plotdata_comb$y!=0)])),0),  # Set y-axis range in log base 10
+      breaks = log10(c(.001, .1, 1#, .5
+      )),  # Set major breaks
+      labels = c(".001", ".1", "1"#, ".5"
+      )  # Label in numeric scale
+    ) 
+  }
+  print(ggplotly(ggplot(plotdata_comb, aes(x = log10(x), y = log10(y), color = state)) +
+                   geom_point()+
+                   plttheme +
+                   pltxscale +
+                   pltyscale +
+                   pltlabs+
+                   theme(legend.position = "right" )+
+                   labs(title = paste(seq,"APs:",paste(APmon,APdim,sep="->")))
+  )
+  )
+}
+
+# lvcplt<-ggplot(plotdata_comb, aes(x = log10(x), y = log10(y), color = state)) +
+#   geom_point()+
+# plttheme +
+# pltxscale +
+# pltyscale +
+#   pltlabs+
+#   theme(legend.position = c(0.6,0.9) )
+# 
+# ggsave(paste0(APplotDir,"lvcplt_clustersize.png"),
+#      plot = lvcplt
+#      , dpi = 1100, width = 12, height = 6
+#      , units = "cm")
+
+
+# # Display the plots
+# ggplotly(plots$dimer$all)
+# ggplotly(plots$monomer$all)
+
+
+#powerlog fitting?
+
+
+# Modify the individual plots:
+# - Remove the x-axis title from the top plot (dimer) but keep its tick marks.
+# - Ensure the bottom plot (monomer) has the x-axis title "cluster-sized".
+# - Remove individual y-axis titles from both.
+
+```
+```{r,results='hold',warning=FALSE}
+readsizehis<-1
+readAP<-1
+save_plots<-0
+seqlist<-c(#"L_V_C",
+  "C_P_V","C_G_I","T_A_C","C_A_S"
+  
+)
+source("~/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/Csizedist/Rscript/Csize_plot.R")
+```
+
+
+# dipeptide cluster size visualization
+```{r}
+dipepseqlist<-c("C_H","C_I","L_C","C_T")
+# File paths and corresponding data names
+files <- list(
+  dimer = "~/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/Csizedist/dimer_cdist.rda",
+  monomer = "~/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/Csizedist/monomer_cdist.rda"
+)
+maindir<-"/Users/song/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/AP_analysis/Dipeptide/"
+
+filepre<-paste0(maindir,"SASA_score_M21/")
+
+
+APfile<-paste0(filepre,"SASA_result_with_common_mon_ini.txt")
+dipeptide_data<-read.table(APfile, header = FALSE, col.names = c("V1", "V2", "Mon","Dim"))
+dipeptide_data$seq<-paste(dipeptide_data$V1,dipeptide_data$V2,sep="_")
+
+
+# Initialize a list to store plots
+plots <- list()
+
+pltxscale<-{scale_x_continuous(
+  limits = log10(c(1, 300)),  # Set x-axis range in log base 10
+  breaks = log10(c(1, 2, 10, 50,100, 300)),  # Set major breaks
+  labels = c("1", "2","10", "50","100", "300")  # Label in numeric scale
+)} 
+pltlabs<- labs(x = "Cluster Size", y = "Frequency", color = "")
+
+for (dipepseq in dipepseqlist) {
+  
+  # Loop through files and generate plots
+  plotdata_comb<-c()
+  for (state in names(files)) {
+    # Load the file
+    load(files[[state]])
+    
+    # Select the appropriate data based on the state
+    data <- if (state == "dimer") dimer_sizehis else monomer_sizehis
+    
+    # Prepare data for plotting
+    plot_data <- data.frame()
+    x_values <- data[, 1]  # Use the first column for x-axis values
+    
+    for (i in 2:ncol(data)) {
+      y_values <- data[, i]  # Select the current column for y-axis
+      temp_data <- data.frame(
+        x = x_values,
+        y = y_values,
+        Sequence = colnames(data)[i]  # Add the column name as Sequence
+      )
+      plot_data <- rbind(plot_data, temp_data)
+    }
+    plot_data$x<-if (state == "dimer") plot_data$x*2 else plot_data$x
+    plot_data<-plot_data[which(plot_data$Sequence==dipepseq),]
+    plot_data$state<-ifelse(state == "dimer","Dimer","Monomer")
+    plotdata_comb<-rbind(plotdata_comb,plot_data)
+  }
+  pltyscale<-{
+    scale_y_continuous(
+      limits = c(min(log10(plotdata_comb$y[which(plotdata_comb$y!=0)])),0),  # Set y-axis range in log base 10
+      breaks = log10(c(.001, .1, 1#, .5
+      )),  # Set major breaks
+      labels = c(".001", ".1", "1"#, ".5"
+      )  # Label in numeric scale
+    ) 
+  }
+  pepseqid<-which(dipeptide_data$seq==dipepseq)
+  APmon<-round(dipeptide_data[pepseqid,]$Mon,digits = 2)
+  APdim<-round(dipeptide_data[pepseqid,]$Dim,digits = 2)
+  singleseqplt_dipeptide<-ggplot(plotdata_comb, aes(x = log10(x), y = log10(y), color = state)) +
+    geom_point()+
+    plttheme +
+    pltxscale +
+    pltyscale +
+    pltlabs+
+    theme(legend.position = c(0.6,0.9) )+
+    labs(title=paste(#dipepseq,
+      "APs:",paste(APmon,APdim,sep="->")))
+  print(ggplotly(singleseqplt_dipeptide))
+  plots[[which(dipepseqlist==dipepseq)]]<-singleseqplt_dipeptide+
+    theme(          axis.title.y = element_blank(),legend.position = "none")
+  
+  if (which(dipepseqlist==dipepseq)<3) {
+    plots[[which(dipepseqlist==dipepseq)]]<- plots[[which(dipepseqlist==dipepseq)]]+
+      theme(axis.title.x = element_blank())
+  }
+  # if (which(dipepseqlist==dipepseq)==1) {
+  #     plots[[which(dipepseqlist==dipepseq)]]<- plots[[which(dipepseqlist==dipepseq)]]
+  # }
+}
+# Extract the legend from one of the original plots (assuming they share the same legend)
+legend <- get_legend(plots[[1]] + theme(legend.position = "right",legend.direction = "vertical"
+))
+
+
+# Combine the two plots vertically.
+combined <- plot_grid( plots[[1]], plots[[2]], plots[[3]], plots[[4]], ncol = 2, align = "v")
+
+# Add a common y-axis title to the left side.
+combined_final <- ggdraw() +
+  # Shift the combined plot to the right by setting x = ..., leaving extra room on the left.
+  draw_plot(combined, x = 0.02, y = 0, width = 0.98, height = 1) +
+  # Place the y-axis label in the left margin
+  draw_label("Frequency", x = 0.02, y = 0.5, angle = 90, size = 12)
+
+# Combine the overall plot with the legend on the right side.
+combined_final <- plot_grid( combined_final, legend,ncol = 2, rel_widths  = c(0.87, 0.13))
+
+ggsave(paste0(APplotDir,"Dipeptide_clustersize_combine.png"),
+       plot = combined_final
+       , dpi = 1100, width = 24, height = 8
+       , units = "cm")
+# ggsave(paste0(APplotDir,"lvcplt_clustersize.png"),
+#      plot = lvcplt
+#      , dpi = 1100, width = 12, height = 6
+#      , units = "cm")
+
+
+
+
+
+#powerlog fitting?
+
+
+# Modify the individual plots:
+# - Remove the x-axis title from the top plot (dimer) but keep its tick marks.
+# - Ensure the bottom plot (monomer) has the x-axis title "cluster-sized".
+# - Remove individual y-axis titles from both.
+
+```
+
+# Gyration tensor plt tripeptide
+```{r}
+load("~/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/gyrT/gyrT_tripeptide.rda")
+load("~/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/gyrT/clussize_tripeptide.rda")
+
+seqlist<-c("L_V_C","C_P_V","C_G_I","T_A_C","C_A_S")
+for (seq in seqlist) {
+  clus_t<-c()
+  if (length(names(gyrT[[seq]]))!=2) {
+    next
+  }
+  for (state in names(gyrT[[seq]])) {
+    if(state=="dis"){
+      stateformal<-"Dimer"
+      #clussize[[seq]][[state]][,2]<-2* clussize[[seq]][[state]][,2]
+    } else {
+      stateformal<-"Monomer"
+    }
+    clus_t<-rbind(clus_t,cbind(clussize[[seq]][[state]],stateformal))
+    print(
+      ggplotly(
+        ggplot(as.data.frame(gyrT[[seq]][[state]]))+
+          geom_line(aes(x=step+200,col=Series,y=Value))+
+          labs(x="t (ns)",y="Principal Moments (Å^2)",title=paste(seq,stateformal))+
+          plttheme+
+          ylim(0,1)
+      )
+    )
+  }
+  clus_t<-as.data.frame(clus_t)
+  colnames(clus_t)<-c("t","size","State")
+  print(
+    ggplotly(
+      ggplot(clus_t)+
+        geom_line(aes(x=as.numeric(t),col=State,y=as.numeric(size)))+
+        labs(x="t (ns)",y="Cluster Size",title=seq)+
+        plttheme+
+        ylim(0,300)
+    )
+  )
+  
+}
+lvcplt<-ggplot(clus_t)+
+  geom_line(aes(x=as.numeric(t),col=State,y=as.numeric(size)))+
+  labs(x="t (ns)",y="Cluster Size",col=""#,title=seq
+  )+
+  plttheme+
+  theme(legend.position = "right",legend.direction = "vertical")
+ggsave(paste0(APplotDir,"lvcplt_clustersize.png"),
+       plot = lvcplt
+       , dpi = 1100, width = 13, height = 5.5
+       , units = "cm")
+```
+
+# Gyration tensor plt dipeptide
+```{r}
+load("~/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/gyrT/gyrT_dipeptide.rda")
+load("~/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/gyrT/clussize_dipeptide.rda")
+maindir<-"/Users/song/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/AP_analysis/Dipeptide/"
+
+filepre<-paste0(maindir,"SASA_score_M21/")
+
+
+APfile<-paste0(filepre,"SASA_result_with_common_mon_ini.txt")
+dipeptide_data<-read.table(APfile, header = FALSE, col.names = c("V1", "V2", "Mon","Dim"))
+dipeptide_data$seq<-paste(dipeptide_data$V1,dipeptide_data$V2,sep="_")
+seqlist<-c("C_I","C_H","L_C")
+for (seq in seqlist) {
+  clus_t<-c()
+  pepseqid<-which(dipeptide_data$seq==seq)
+  APmon<-round(dipeptide_data[pepseqid,]$Mon,digits = 2)
+  APdim<-round(dipeptide_data[pepseqid,]$Dim,digits = 2)
+  for (state in names(gyrT[[seq]])) {
+    if(state=="dis"){
+      stateformal<-"Dimer"
+      #clussize[[seq]][[state]][,2]<-2* clussize[[seq]][[state]][,2]
+    } else {
+      stateformal<-"Monomer"
+    }
+    clus_t<-rbind(clus_t,cbind(clussize[[seq]][[state]],stateformal))
+    print(
+      ggplotly(
+        ggplot(as.data.frame(gyrT[[seq]][[state]]))+
+          geom_line(aes(x=step+200,col=Series,y=Value))+
+          labs(x="t (ns)",y="Principal Moments (Å^2)",title=paste(seq,stateformal))+
+          plttheme+
+          ylim(0,1)
+      )
+    )
+  }
+  clus_t<-as.data.frame(clus_t)
+  colnames(clus_t)<-c("t","size","State")
+  print(
+    ggplotly(
+      ggplot(clus_t)+
+        geom_line(aes(x=as.numeric(t),col=State,y=as.numeric(size)))+
+        labs(x="t (ns)",y="Cluster Size",title=paste(seq,"APs:",paste(APmon,APdim,sep="->")))+
+        plttheme#+
+      #               ylim(0,300)
+    )
+  )
+  
+}
+```
+
+
+
+# ML plot test
+```{r}
+
+
+# How many different kl you want to see?
+kl_bin<-4
+
+# Define the path to the CSV file
+csv_file <- "~/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/DL_for_Peptide/results_seq_dist/Test_reg_Transformer_lr_0.2_bs_32.csv"  # Update this if needed
+
+# Read the CSV file
+df_test_save <- read.csv(csv_file, stringsAsFactors = FALSE)
+
+
+
+# Function to parse a distribution string into a numeric vector
+parse_dist <- function(dist_str) {
+  # Remove square brackets
+  dist_str <- gsub("\\[|\\]", "", dist_str)
+  # Split by comma, trim spaces, and convert to numeric
+  as.numeric(trimws(unlist(strsplit(dist_str, ","))))
+}
+
+# Calculate the minimum and maximum of the KL divergence values
+kl_range <- range(df_test_save$kl_divergences)
+# Generate a sequence from the minimum to maximum with step size equal to one-fourth the range
+target_kl_values <- seq(from = kl_range[1], to = kl_range[2], by = diff(kl_range)/kl_bin)
+# Initialize a list to store the plots
+plot_list <- list()
+
+# Loop over each target KL divergence value
+for (target in target_kl_values) {
+  # Find the row in df_test_save with KL divergence closest to the target value
+  idx <- which.min(abs(df_test_save$kl_divergences - target))
+  row_data <- df_test_save[idx, ]
+  feature_name <- row_data$feature           # Feature name
+  kl_value <- row_data$kl_divergences          # KL divergence value
+  pred_vec <- parse_dist(row_data$predict)     # Parse predicted distribution
+  label_vec <- parse_dist(row_data$label)      # Parse true distribution
+  
+  # Create a data frame for plotting both distributions over the sequence positions
+  df_plot <- data.frame(
+    Position = rep(1:length(pred_vec), 2),       # x-axis: position indices
+    Value = c(pred_vec, label_vec),              # y-axis: values from predict and label
+    Type = rep(c("Predict", "CGMD"), each = length(pred_vec))  # Line type
+  )
+  
+  # Generate the plot with a title showing feature and KL divergence
+  p <- ggplot(df_plot, aes(x = log10(Position), y = log10(Value), color = Type)) +
+    geom_point() +
+    ggtitle(paste("Feature:", feature_name, "KL:", round(kl_value,2))) +
+    plttheme+
+    scale_x_continuous(
+      limits = log10(c(1, 300)),  # Set x-axis range in log base 10
+      breaks = log10(c(1, 2, 10, 100, 300)),  # Set major breaks
+      labels = c("1", "2","10", "100", "300")  # Label in numeric scale
+    )+
+    scale_y_continuous(
+      limits = c(log10(6.7E-6),0),  # Set y-axis range in log base 10
+      breaks = log10(c(.001, .1, 1#, .5
+      )),  # Set major breaks
+      labels = c(".001", ".1", "1"#, ".5"
+      )  # Label in numeric scale
+    ) +
+    labs(x="Cluster Size",y="Frequency")
+  # Store and print the plot
+  plot_list[[idx]] <- p
+  print(ggplotly(p))
+}
+
+```
+
+
+
+# Mutation analys ddEdge tripeptide 
+```{r}
+save_plots<-1
+loadnetstat<-1
+otherstatpltsave<-0
+pltsavedir<-"~/Documents/Research/manuscript/ML_MD_pep/ML_MD Peptide/MARTINI_plt/"
+
+tripep_ddedge_script<-"~/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/Plotting/Mutation_analysis_C_position_tri.R"
+plot_title_size <- 10
+axis_title_size <- 10
+axis_text_size <- 6
+legend_title_size <- 10
+legend_text_size <- 8
+source(tripep_ddedge_script)
+```
+
+# Tripeptide cluster distribution visualization
+```{r}
+save_plots <- 1
+readsizehis <- 1
+readAP <- 1
+loaddata<-0
+pltsavedir <- "~/Documents/Research/manuscript/ML_MD_pep/ML_MD Peptide/MARTINI_plt/"
+
+seqlist <- c("C_P_V", "C_G_I", "T_A_C", "C_A_S")
+tripep_clusdist_script <- "~/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/Plotting/Clusdist_visualization_tri.R"
+source(tripep_clusdist_script)
+```
+
+# Mutation analys ddAP
+```{r}
+readAP<-TRUE
+save_plots<-TRUE
+source("~/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/Plotting/Mutation_analysis_AP.R")
+
+
+
+```
+
+# Mutation analys ddAP by C position tripeptide 
+```{r}
+readAP<-TRUE
+save_plots<-1
+ddap_tri_script<-"~/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/Plotting/Mutation_analysis_AP_C_pos_tripeptide.R"
+#file.edit(ddap_tri_script)
+# Text size control
+plot_title_size <- 10
+axis_title_size <- 10
+axis_text_size <- 6
+legend_title_size <- 10
+legend_text_size <- 8
+source(ddap_tri_script)
+```
+
+# Mutation analys ddAP by C position tetrapeptide
+```{r}
+readAP<-TRUE
+save_plots<-0
+source("~/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/Plotting/Mutation_analysis_AP_C_pos_tetrapeptide.R")
+```
+
+# Dipeptide position analysis
+```{r}
+readAP<-TRUE  # For reading AP data files
+loadnetstat<-1  # For loading network stats
+plotedge<-1  # For analyzing and plotting edge data
+plotap<-TRUE  # For analyzing and plotting AP data
+save_plots<-1
+pltsavedir<-"~/Documents/Research/manuscript/ML_MD_pep/ML_MD Peptide/MARTINI_plt/"
+dipep_pos_script<-"~/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/Plotting/Mutation_analysis_dipeptide.R"
+source(dipep_pos_script)
+#file.edit(dipep_pos_script)
+```
+
+# Position analysis tetrapeptide
+```{r}
+loadnetstat<-1
+save_plots<-1
+source("~/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/Plotting/Edge_correlation_C_position.R")
+```
+
+# dEdge & dAP by C position tetrapeptide
+```{r}
+loadnetstat<-1
+save_plots<-1
+pltsavedir<-"~/Documents/Research/manuscript/ML_MD_pep/ML_MD Peptide/MARTINI_plt/"
+plot_title_size <- 10
+axis_title_size <- 10
+axis_text_size <- 6
+legend_title_size <- 8
+legend_text_size <- 6
+APonly <- 0  # Default value; user can set to TRUE if needed
+source("~/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/Plotting/Edge_correlation_C_position_tetra.R")
+```
+
+# dEdge by C position tripeptide
+```{r}
+loadnetstat<-1
+save_plots<-0
+edge_coor_tri_plt<-"~/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/Plotting/Edge_correlation_C_position_tri.R"
+# Text size control
+plot_title_size <- 10
+axis_title_size <- 10
+axis_text_size <- 6
+legend_title_size <- 8
+legend_text_size <- 6
+single_node<-0
+  source(edge_coor_tri_plt)
+#file.edit(edge_coor_tri_plt)
+```
+
+# dEdge by C position dipeptide
+```{r}
+loadnetstat<-1
+save_plots<-0
+edge_coor_di_plt<-"~/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/Plotting/Edge_correlation_C_position_di.R"
+# Text size control
+plot_title_size <- 10
+axis_title_size <- 10
+axis_text_size <- 6
+legend_title_size <- 8
+legend_text_size <- 6
+source(edge_coor_di_plt)
+```
+
+# Mutation analys ddedge by C position tetrapeptide edge
+```{r}
+loadnetstat<-0
+save_plots<-1
+otherstatpltsave<-0
+pltsavedir<-"~/Documents/Research/manuscript/ML_MD_pep/ML_MD Peptide/MARTINI_plt/"
+mut_tetra_script<-"~/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/Plotting/Mutation_analysis_C_position_tetra.R"
+# Text size control
+plot_title_size <- 10
+axis_title_size <- 10
+axis_text_size <- 6
+legend_title_size <- 10
+legend_text_size <- 8
+
+source(mut_tetra_script)
+#file.edit(mut_tetra_script)
+```
+# graph visualization
+```{r}
+#Also redo these AP plots in ways similar to how they are plotted in the edge correlation plot. one script for dipeptide, one for tri, one for tetra
+```
+
+# ML plt
+```{r}
+saveplt<-1
+base_path_plt<-"~/Documents/Research/manuscript/ML_MD_pep/ML_MD Peptide/ML_plt"
+mlpltscript<-"~/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/DL_for_Peptide/ML_dEdge/analysis/plotting/plot_iteration1_results.R"
+mlpltscript<-"~/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/DL_for_Peptide/ML_dEdge/analysis/plotting/plot_iteration2_results.R"
+readdata<-1
+# Text size control
+plot_title_size <- 10
+axis_title_size <- 10
+axis_text_size <- 8
+legend_title_size <- 8
+legend_text_size <- 6
+file.edit(mlpltscript)
+source(mlpltscript)
+
+#think about this, dAP vs dEdge, or AP vs ED, distribution, map them onto each other, whhich point has least coorelation?
+  
+#  record extream pairs, quota are ready to roll!!
+```
+
+
+
+# Tripeptide turbidity experimental data
+```{r}
+saveplt<-1
+reloaddata<-0
+base_path_plt<-"~/Documents/Research/manuscript/ML_MD_pep/ML_MD Peptide/Exp_data"
+Exp_plt_script<-"~/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/Plotting/Experimental_data_tripeptide_run1.R"
+source(Exp_plt_script)
+```
+
+
+
+# Network stat
+```{r}
+loadnetstat<-0
+save_plots<-0
+network_stat_tri<-"~/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/Plotting/Network_stats_plot_Tripeptide.R"
+# Text size control
+plot_title_size <- 10
+axis_title_size <- 10
+axis_text_size <- 6
+legend_title_size <- 8
+legend_text_size <- 6
+plot_individual_seqs<-0
+file.edit(network_stat_tri)
+source(network_stat_tri)
+```
+
+
+# Node Definition Comparison 
+
+```{r}
+save_plots <- 1
+pltsavedir<-"~/Documents/Research/manuscript/ML_MD_pep/ML_MD Peptide/MARTINI_plt/"
+node_def_script <- "~/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/Plotting/Edge_comparison_single_vs_non.R"
+
+# Text size control
+plot_title_size <- 10
+axis_title_size <- 10
+axis_text_size <- 6
+legend_title_size <- 10
+legend_text_size <- 8
+
+source(node_def_script)
+print(final_plot)
+```
+
+
+# AP table
+```{r}
+source("~/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/Plotting/AP_table_Dipeptide.R")
+```
+
+# dAP vs dEdge APS2025 version
+```{r}
+loadnetstat<-0
+save_plots<-0
+otherstatpltsave<-0
+pltsavedir<-"/Users/song/Documents/Research/manuscript/APS2025/figures"
+dedge_dap_script<-"~/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/Plotting/dEdge_dAP_distribution_plots.R"
+# Text size control
+plot_title_size <- 10
+axis_title_size <- 10
+axis_text_size <- 6
+legend_title_size <- 10
+legend_text_size <- 8
+
+source(dedge_dap_script)
+print(ggplotly(g1))
+print(ggplotly(g2))
+print((g3))
+#file.edit(dedge_dap_script)
+```
+# Exp Validation APS2025 version
+```{r}
+loadnetstat<-0
+save_plots<-1
+pltsavedir<-"/Users/song/Documents/Research/manuscript/APS2025/figures"
+exp_vali_R1_post<-"~/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/Plotting/Experimental_data_tripeptide_poster.R"
+# Text size control
+plot_title_size <- 10
+axis_title_size <- 10
+axis_text_size <- 6
+legend_title_size <- 10
+legend_text_size <- 8
+
+source(exp_vali_R1_post)
+print(final_plot)
+
+#file.edit(mut_tetra_script)
+```
+
+
+# ML_prediction APS2025 version
+```{r}
+# 
+loadnetstat <- 0
+save_plots <- 1
+pltsavedir <- "/Users/song/Documents/Research/manuscript/APS2025/figures"
+ml_pred_plot_script <- "~/Documents/Research/HPC/dfs2/mrsec/ML-MD-Peptide/DL_for_Peptide/ML_dEdge/analysis/plotting/plot_iteration2_APS_poster.R"
+
+# Text size control
+plot_title_size <- 10
+axis_title_size <- 10
+axis_text_size <- 6
+legend_title_size <- 10
+legend_text_size <- 8
+
+source(ml_pred_plot_script)
+print(final_plot)
+```
+

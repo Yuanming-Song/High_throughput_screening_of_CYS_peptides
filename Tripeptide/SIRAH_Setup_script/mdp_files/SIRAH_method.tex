@@ -1,0 +1,30 @@
+\subsection{SIRAH Simulations}
+
+All atomistic structures of peptides were generated using an in-house VMD script\cite{VMD} and minimized in CHARMM36m force field\cite{CHARMM36m}. Cysteine residues involved in disulfide bonds were converted to CYX type prior to CG mapping.
+Topologies and coordinate files were generated using the SIRAH tools\cite{SIRAH2.0}, and backbone restraints were included during equilibration via custom itp files generated using GROMACS software package (versions 2020.4 and 2022.1)\cite{GROMACS,GROMACS2}.
+
+Coarse-grained (CG) molecular dynamics simulations were performed using the SIRAH 2.0 force field for proteins\cite{SIRAH2.0} and the WT4 model for water, with corresponding SIRAH models for ions\cite{SIRAHWT}.
+All simulations were carried out with the GROMACS software package (versions 2020.4 and 2022.1)\cite{GROMACS,GROMACS2}.
+
+For disulfide-linked peptides, a total of 150 CG peptide molecules were inserted into a cubic simulation box of 13 nm per side, ensuring a minimum distance of 0.5 nm between molecules.
+For monomeric peptides, 300 copies were used.
+The system was solvated with WT4 water beads, and neutralized with NaW and ClW ions as needed.
+The initial configuration was subjected to a two-step energy minimization (15,000 steps each, steepest descent algorithm, emtol 1.0 kJ$\cdot$mol$^{-1}\cdot$nm$^{-1}$, emstep 0.05 nm).
+
+Following minimization, the system underwent a 2 ns NPT equilibration to condense the solvent (dt = 2 fs, 200,000 steps, V-rescale thermostat, $\tau_t$ = 2 ps, Parrinello-Rahman barostat, $\tau_p$ = 8 ps, compressibility = $4.5 \times 10^{-5}$ bar$^{-1}$, reference pressure 1 bar).
+This was followed by two NVT equilibration steps: 5 ns (dt = 20 fs, 100,000 steps, $\tau_t$ = 1 ps) and 25 ns (dt = 20 fs, 1,250,000 steps, $\tau_t$ = 1 ps), both at 300 K.
+During equilibration, backbone positional restraints (1000 kJ$\cdot$mol$^{-1}\cdot$nm$^{-2}$) were applied to all protein beads.
+
+Production simulations were performed in the NPT ensemble for 0.5 $\mu$s (dt = 20 fs, 25,000,000 steps) at 300 K and 1 bar, using the V-rescale thermostat ($\tau_t$ = 2 ps) and Parrinello-Rahman barostat ($\tau_p$ = 8 ps).
+Electrostatic interactions were treated with the smooth particle-mesh Ewald (PME) method\cite{PME,PMEEssmann}, with a real-space cutoff of 1.2 nm.
+Lennard-Jones interactions were cut off at 1.2 nm.
+Neighbor searching was performed using a grid algorithm with a cutoff of 1.2 nm and an update frequency of 10 steps (100 steps for production).
+The leap-frog integrator was used throughout\cite{Leap-frog}.
+
+
+
+
+
+
+
+
