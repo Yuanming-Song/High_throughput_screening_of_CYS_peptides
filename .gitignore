@@ -102,5 +102,7 @@ DL_for_Peptide/
 Traj/
 Judred/
 # Ignore everything in for_Giannmarc except the tar.gz archive
-for_Giannmarc/**
+for_Giannmarc/*
+!for_Giannmarc/**/*.tar.gz
+for_Giannmarc/**/*
 !for_Giannmarc/**/*.tar.gz
