@@ -1,1 +1,106 @@
-Edgelist/Tripeptide/tripeptide_edgelist_monomer.rda
+rsync_crsp/
+# Ignore binary data files
+*.rda
+*.dat
+
+# Also ignore RDA and DAT files in any subdirectory
+**/*.rda
+**/*.dat
+
+# Ignore image/graphic files
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+
+# Ignore peptide-sequence dirs of single-letter segments separated by underscores at any depth
+**/*_*/
+!**/*[A-Za-z][A-Za-z]*/
+
+# Ignore force field directories
+MARTINI21/
+MARTINI22/
+SIRAH/
+
+# Nested force field directories at any depth
+**/MARTINI21/
+**/MARTINI22/
+**/SIRAH/
+
+# Ignore DL_for_Peptide directories
+DL_for_Peptide/
+**/DL_for_Peptide/
+
+# Ignore large archive files
+*.zip
+**/*.zip
+*.tar
+**/*.tar
+*.tar.gz
+**/*.tar.gz
+
+# Ignore GROMACS output files
+*.xtc
+**/*.xtc
+*.gro
+**/*.gro
+*.trr
+**/*.trr
+*.edr
+**/*.edr
+*.log
+**/*.log
+*.tpr
+**/*.tpr
+*.cpt
+**/*.cpt
+*.top
+**/*.top
+*.itp
+**/*.itp
+*.ndx
+**/*.ndx
+*.xvg
+**/*.xvg
+*.pdb
+**/*.pdb
+*.pdb.gz
+**/*.pdb.gz
+*.xtc.gz
+**/*.xtc.gz
+*.trr.gz
+**/*.trr.gz
+*.edr.gz
+**/*.edr.gz
+*.tpr.gz
+**/*.tpr.gz
+*.cpt.gz
+**/*.cpt.gz
+*.mdp.gz
+**/*.mdp.gz
+*.top.gz
+**/*.top.gz
+*.itp.gz
+**/*.itp.gz
+*.ndx.gz
+**/*.ndx.gz
+*.xvg.gz
+**/*.xvg.gz
+
+# Ignore text and output-related files, including in subdirectories
+*.txt
+**/*.txt
+*.csv
+**/*.csv
+*.out
+**/*.out
+*.err
+**/*.err
+**/*#
+**/.*
+Traj/
+Judred/
+# Ignore everything in for_Giannmarc except the tar.gz archive
+for_Giannmarc/**
+!for_Giannmarc/**/*.tar.gz
